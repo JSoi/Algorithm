@@ -1,3 +1,4 @@
+package baekjoon;
 
 public class N4673 {
 	public static void main(String[] args) {

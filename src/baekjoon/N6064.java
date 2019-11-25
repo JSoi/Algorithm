@@ -1,3 +1,4 @@
+package baekjoon;
 import java.util.Scanner;
 
 public class N6064 {
