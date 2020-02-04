@@ -2,7 +2,7 @@ package programmers;
 import java.util.*;
 class Solution {
 	public String solution(String[] participant, String[] completion) {
-		HashMap<String, Integer> completionMap = new HashMap();
+		HashMap<String, Integer> completionMap = new HashMap<String, Integer>();
         for(int c = 0; c < completion.length; c++) {      
             if(completionMap.containsKey(completion[c])){
                 completionMap.put(completion[c], completionMap.get(completion[c]) + 1);
