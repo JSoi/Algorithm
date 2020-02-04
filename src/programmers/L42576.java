@@ -1,7 +1,12 @@
 package programmers;
 import java.util.*;
-class Solution {
-	public String solution(String[] participant, String[] completion) {
+public class L42576 {
+	public static void main(String args[]) {
+		String[] participant = {"leo", "kiki", "eden"};
+		String[] completion = {"eden", "kiki"};
+		System.out.println(solution(participant, completion));
+	}
+	public static String solution(String[] participant, String[] completion) {
 		HashMap<String, Integer> completionMap = new HashMap<String, Integer>();
         for(int c = 0; c < completion.length; c++) {      
             if(completionMap.containsKey(completion[c])){
@@ -26,11 +31,3 @@ class Solution {
      }
 }
 //
-public class L42576 {
-	public static void main(String args[]) {
-		Solution sol = new Solution();
-		String[] participant = {"leo", "kiki", "eden"};
-		String[] completion = {"eden", "kiki"};
-		System.out.println(sol.solution(participant, completion));
-	}
-}

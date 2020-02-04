@@ -2,8 +2,6 @@ package baekjoon;
 import java.util.Scanner;
 
 public class N1152 {
-
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		String[] dictionary = new String[1000000];
 		String rawInput[];
