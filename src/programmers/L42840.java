@@ -8,7 +8,7 @@ public class L42840 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		int[] arr = {1,3,2,4,2};
-		System.out.println("first : " + Arrays.toString(solution(arr)));
+		//System.out.println("first : " + Arrays.toString(solution(arr)));
 	}
 	//1번 수포자가 찍는 방식: 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, ...
 	//
