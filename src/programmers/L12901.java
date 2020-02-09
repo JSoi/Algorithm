@@ -1,6 +1,6 @@
 package programmers;
 
-public class N12901 {
+public class L12901 {
 	public static String solution(int a, int b) {
 		int[] monthday = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		String[] daystr = {"THU","FRI", "SAT", "SUN", "MON", "TUE", "WED"};
