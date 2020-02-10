@@ -3,9 +3,17 @@ package programmers;
 public class Test {
 
 	public static void main(String[] args) {
+		L12918 test = new L12918();
+		System.out.println(test.solution("a123"));
+		System.out.println(test.solution("1234"));
+	}
+	
+
+	public static void mainL12916(String[] args) {
 		L12916 test = new L12916();
 		System.out.println(test.solution("Pyy"));
 	}
+
 
 	public static void mainL12915(String[] args) {
 		L12915 test = new L12915();
