@@ -3,14 +3,12 @@ package baekjoon;
 import java.util.Scanner;
 
 public class N16561 {
-	static int input;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner scan = new Scanner(System.in);
-		input = scan.nextInt();
+		int input = scan.nextInt();
+		input /= 3;
+		System.out.println((input - 1) * (input - 2) / 2);
 		scan.close();
-	}
-	public static void dfs(int a, int b, int c) {
-		
 	}
 }
