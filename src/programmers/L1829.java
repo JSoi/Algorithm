@@ -33,7 +33,6 @@ public class L1829 {
 	}
 
 	public static int dfs(int x, int y, int thiscolor) {
-
 		int val = 1;
 		if (x < 0 || x >= picture.length || y < 0 || y >= picture[0].length)
 			return 0;
