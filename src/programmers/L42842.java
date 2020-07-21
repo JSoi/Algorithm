@@ -12,7 +12,7 @@ public class L42842 {
 	// 갈색 두께는 1
 	public static int[] solution(int b, int y) {
 		int[] answer = new int[2];
-		for (int g = b + y / 2; g >= (int) Math.sqrt(b + y); g--) {
+		for (int g = (b + y) / 2; g >= (int) Math.sqrt(b + y); g--) {
 			if ((b + y) % g != 0) {
 				continue;
 			}
