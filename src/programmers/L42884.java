@@ -3,75 +3,94 @@ package programmers;
 import java.util.*;
 
 public class L42884 {
-
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Solution_42884 sol = new Solution_42884();
-		System.out.println(sol.solution(4, new int[][] { { 0, 1, 1 }, { 0, 2, 2 }, { 2, 3, 1 } }));
+		Solution42884 sol = new Solution42884();
+		System.out.println(sol.solution(new int[][] { { -20, 15 }, { -14, -5 }, { -18, -13 }, { -5, -3 } }));
 	}
-
 }
 
-class Solution_42884 {
+class Solution42884 {
+	ArrayList<int[]> arr;
+	ArrayList<Integer> point;
 	int answer;
-	int Node;
-	int E;
-	Queue<Graph42884> q;
-	int[] parent;
-	boolean[] visit;
 
-	public int find(int a) {
-		if (a == parent[a])
-			return a;
-		parent[a] = find(parent[a]);
-		return parent[a];
-	}
+	public int solution(int[][] routes) {
+		int answer = 0;
+		int camera = 300001;
 
-	public void union(int a, int b) {
-		int aRoot = find(a);
-		int bRoot = find(b);
-		if (aRoot != bRoot) {
-			parent[aRoot] = b;
-		} else {
-			return;
-		}
-	}
+		Arrays.sort(routes, (b, a) -> a[0] - b[0]);
+		// 시작을 기준으로 내림차순 정렬
 
-	public int solution(int n, int[][] costs) {
-		Node = n;
-		E = costs.length;
-		q = new PriorityQueue<Graph42884>((Graph42884 p1, Graph42884 p2) -> p1.cost - p2.cost);
-		for (int[] r : costs) {
-			q.add(new Graph42884(r[0], r[1], r[2]));
-		}
-		parent = new int[Node];
-		visit = new boolean[Node];
-		for (int i = 0; i < Node; i++) {
-			parent[i] = i;
-		}
-		for (int k = 0; k < E; k++) {
-			Graph42884 g = q.poll();
-			int start = g.start;
-			int end = g.end;
-			int sParent = find(start);
-			int eParent = find(end);
-			if (sParent == eParent)
-				continue;
-			union(start, end);
-			answer += g.cost;
+		for (int[] route : routes) {
+			if (route[1] < camera) { // 경계선인 시작점에 카메라를 세운다
+				camera = route[0];
+				answer++;
+			}
 		}
 		return answer;
 	}
-}
 
-class Graph42884 {
-	int start;
-	int end;
-	int cost;
+	public int solution2(int[][] routes) { // 시간초과
+		answer = Integer.MAX_VALUE;
+		arr = new ArrayList<int[]>();
+		point = new ArrayList<Integer>();
+		for (int i = 0; i < routes.length; i++) {
+			int put[] = { routes[i][0], routes[i][1] };
+			if (!point.contains(routes[i][0]))
+				point.add(routes[i][0]);
+			if (!point.contains(routes[i][1]))
+				point.add(routes[i][1]);
+			arr.add(put);
+		}
+		Collections.sort(arr, (int[] a1, int[] a2) -> a1[1] - a2[1]);
+		Collections.sort(point, (a1, a2) -> a1 - a2);
+		boolean[][] passingCars = new boolean[point.size()][routes.length];
+		boolean[] pass = new boolean[point.size()];
+		boolean[] cars = new boolean[arr.size()];
+		for (int i = 0; i < point.size(); i++) {
+			for (int j = 0; j < arr.size(); j++) {
+				if (arr.get(j)[0] <= point.get(i) && point.get(i) <= arr.get(j)[1]) {
+					passingCars[i][j] = true;
+				}
+			}
+		}
+		best(pass, cars, passingCars, 0);
+		return answer;
+	}
 
-	Graph42884(int a, int b, int c) {
-		this.start = a;
-		this.end = b;
-		this.cost = c;
+	// passing cars[point][car]
+	public void best(boolean point[], boolean car[], boolean[][] passingCars, int camNum) {
+		if (capAll(car)) {
+			answer = Math.min(answer, camNum);
+			return;
+		}
+		for (int i = 0; i < passingCars.length; i++) {
+			if (!point[i]) {
+				boolean[] tempP = new boolean[point.length];
+				boolean[] tempC = new boolean[car.length];
+				tempP = point.clone();
+				tempC = car.clone();
+				point[i] = true;
+				int plusCar = 0;
+				for (int j = 0; j < passingCars[0].length; j++) {
+					if (passingCars[i][j]) {
+						car[j] = true;
+						plusCar++;
+					}
+				}
+				best(point, car, passingCars, plusCar);
+				car = tempC;
+				point = tempP;
+			}
+		}
+	}
+
+	public boolean capAll(boolean[] v) {
+		for (boolean b : v) {
+			if (!b)
+				return false;
+		}
+		return true;
 	}
 }
