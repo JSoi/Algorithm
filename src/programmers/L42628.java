@@ -9,14 +9,14 @@ public class L42628 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Solution sol = new Solution();
+		Solution_42628 sol = new Solution_42628();
 		System.out.println(sol.solution2(new String[] { "I 16", "D 1" }));
 		System.out.println(sol.solution2(new String[] { "I 7", "I 5", "I -5", "D -1" }));
 	}
 
 }
 
-class Solution {
+class Solution_42628 {
 	public int[] solution(String[] operations) {
 		int[] answer = { 0, 0 };
 		ArrayList<Integer> ans = new ArrayList<Integer>();
