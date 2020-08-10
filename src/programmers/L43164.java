@@ -6,24 +6,25 @@ public class L43164 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Solution43164 sol = new Solution43164();
-		Solution43164 sol2 = new Solution43164();
-		Solution43164 sol3 = new Solution43164();
-		Solution43164 sol4 = new Solution43164();
-//		sol.solution(new String[][] { { "ICN", "JFK" }, { "HND", "IAD" }, { "JFK", "HND" } });
-		sol2.solution(new String[][] { { "ICN", "SFO" }, { "ICN", "ATL" }, { "SFO", "ATL" }, { "ATL", "ICN" },
-				{ "ATL", "SFO" } });
-//		sol3.solution(new String[][] { { "ICN", "A" }, { "ICN", "B" }, { "B", "ICN" } });
-//		sol4.solution(new String[][] { { "ICN", "COO" }, { "COO", "ICN" }, { "ICN", "COO" } });
+		Solution43164[] sol = new Solution43164[7];
+		sol[0].solution(new String[][] { { "ICN", "JFK" }, { "HND", "IAD" }, { "JFK", "HND" } });
+		sol[1].solution(new String[][] { { "ICN", "SFO" }, { "ICN", "ATL" }, { "SFO", "ATL" }, { "ATL", "ICN" } });
+		sol[2].solution(new String[][] { { "ICN", "A" }, { "ICN", "B" }, { "B", "ICN" } });
+		sol[3].solution(new String[][] { { "ICN", "COO" }, { "COO", "ICN" }, { "ICN", "COO" } });
+		sol[4].solution(new String[][] { { "ICN", "A" }, { "ICN", "A" }, { "A", "ICN" } });
+		sol[5].solution(new String[][] { { "ICN", "COO" }, { "ICN", "BOO" }, { "COO", "ICN" }, { "BOO", "DOO" } });
+		sol[6].solution(new String[][] { { "ICN", "A" }, { "ICN", "A" }, { "A", "ICN" }, { "A", "ICN" } });
 	}
-
 }
 
 class Solution43164 {
-	ArrayList<String> ansarr = new ArrayList<String>();
 	ArrayList<String> airport = new ArrayList<String>();
+	int N;
+	ArrayList<String> arr = new ArrayList<String>();
+	String[] answer;
 
 	public String[] solution(String[][] tickets) {
+		N = tickets.length + 1;
 		for (int i = 0; i < tickets.length; i++) {
 			if (!airport.contains(tickets[i][0]))
 				airport.add(tickets[i][0]);
@@ -35,47 +36,51 @@ class Solution43164 {
 		for (int i = 0; i < tickets.length; i++) {
 			visit[airport.indexOf(tickets[i][0])][airport.indexOf(tickets[i][1])]++;
 		}
-		addAns(visit, airport.indexOf("ICN"));
-
-		// String[] array = ansarr.stream().toArray(String[]::new);
-		String[] answer = ansarr.stream().toArray(n -> new String[n]);
-		System.out.println(Arrays.toString(answer));
+		answer = new String[N];
+		addAns(visit, 0, airport.indexOf("ICN"), answer);
+		Collections.sort(arr);
+		answer = arr.get(0).split(" ");
 		return answer;
 	}
 
-	public void addAns(int[][] visit, int target) {
-		ansarr.add(airport.get(target));
+	public void addAns(int[][] visit, int idx, int target, String[] ans) {
+		ans[idx] = airport.get(target);
+//		System.out.println("ans : " + Arrays.toString(ans));
 		ArrayList<Integer> order = new ArrayList<Integer>();
 		for (int i = 0; i < visit[0].length; i++) {
 			if (visit[target][i] > 0 && i != target) {
 				order.add(i);
 			}
 		}
-		if (order.isEmpty())
-			return;
+		if (idx >= N - 1) {
+			String str = "";
+			for (String s : ans) {
+				str += s + " ";
+			}
+			arr.add(str.trim());
+		}
 		Collections.sort(order, new Comparator<Integer>() {
 			@Override
 			public int compare(Integer o1, Integer o2) {
 				boolean b1 = isEmpty(visit, o1);
 				boolean b2 = isEmpty(visit, o2);
-				System.out.println("a1 : " + o1 + " / b1 : " + b1);
-				System.out.println("a1 visit : " + Arrays.toString(visit[o1]));
-				System.out.println("a2 : " + o2 + " / b2 : " + b2);
-				System.out.println("a2 visit : " + Arrays.toString(visit[o2]));
 				if (b1 && b2 || !b1 && !b2) {
-					return o1.compareTo(o2);
-				} else if (b1 && !b2) {
-					return 1;
-				} else if (!b1 && b2) {
+					return o1 - o2;
+				} else if (b1 && !b2) {// 0,
+					return -1;
+				} else if (!b1 && b2) { // 2, 0
 					return -1;
 				} else {
-					return o1.compareTo(o2);
+					return o1 - o2;
 				}
 			}
 		});
-		System.out.println(order.toString());
 		for (int k : order) {
-			addAns(visit, k);
+			if (visit[target][k] <= 0)
+				continue;
+			visit[target][k]--;
+			addAns(visit, idx + 1, k, ans);
+			visit[target][k]++;
 		}
 	}
 
