@@ -10,8 +10,20 @@ public class L42578 {
 				{ "green_turban", "headgear" } }));
 	}
 
-	// Hashmap+ Permutation
 	public static int solution(String[][] clothes) {
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		for (String[] c : clothes) {
+			map.put(c[1], map.getOrDefault(c[1], 0) + 1);
+		}
+		int answer = 1;
+		for (String s : map.keySet()) {
+			answer *= (map.get(s) + 1);
+		}
+		return answer - 1;
+	}
+
+	// Hashmap+ Permutation
+	public static int solution1st(String[][] clothes) {
 		int answer = 0;
 		int arrc = 0;
 		HashMap<String, Integer> Closet = new HashMap<String, Integer>();
