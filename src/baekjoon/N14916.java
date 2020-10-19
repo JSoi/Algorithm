@@ -8,6 +8,7 @@ public class N14916 {
 		// TODO Auto-generated method stub
 		Scanner scan = new Scanner(System.in);
 		int money = scan.nextInt();
+		scan.close();
 		int answer = Integer.MAX_VALUE;
 		for (int i = money / 5; i >= 0; i--) {
 			if ((money - i * 5) % 2 == 0) {
