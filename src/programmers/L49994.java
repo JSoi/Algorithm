@@ -1,6 +1,5 @@
 package programmers;
 
-import java.util.HashSet;
 
 public class L49994 {
 
@@ -36,9 +35,7 @@ public class L49994 {
 
 				nextX = startX + dx[dIndex];
 				nextY = startY + dy[dIndex];
-				// 이전에 움직인 범위에 의해 캐릭터의 위치가 지도를 벗어났을 경우
 				if (nextX < 0 || nextY < 0 || nextX > 10 || nextY > 10) {
-					// 다시 캐릭터를 전의 위치로 이동
 					continue;
 				}
 				if (!visit[startX][startY][nextX][nextY] && !visit[nextX][nextY][startX][startY]) {
