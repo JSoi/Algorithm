@@ -39,7 +39,7 @@ public class L43165 {
 		return answer;
 	}
 
-	public void solve(int[] numbers, int now, int value) {
+	public void solve(int[] numbers, int now, int value) { // same method name.. ^^
 		if (now == numbers.length) {
 			if (targetS == value) {
 				answer++;
