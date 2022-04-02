@@ -30,4 +30,28 @@ public class L43165 {
 		}
 	}
 
+	public int answer = 0;
+	public int targetS = 0;
+
+	public int solution2(int[] numbers, int target) {
+		targetS = target;
+		solve(numbers, 0, 0);
+		return answer;
+	}
+
+	public void solve(int[] numbers, int now, int value) { // same method name.. ^^
+		if (now == numbers.length) {
+			if (targetS == value) {
+				answer++;
+			} else {
+				return;
+			}
+		} else {
+			int vm = value - numbers[now];
+			int vp = value + numbers[now];
+			solve(numbers, now + 1, vm);
+			solve(numbers, now + 1, vp);
+		}
+	}
+
 }
