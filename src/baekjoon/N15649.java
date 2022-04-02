@@ -3,37 +3,43 @@ package baekjoon;
 import java.util.*;
 
 public class N15649 {
-	static int number, count;
+	static int num, count;
+	static int[] selected;
+	static boolean[] used;
 	static StringBuilder sb = new StringBuilder();
-	static int[] array;
 
-	static void rec_func(int k) {
+	static void input() {
+		Scanner scan = new Scanner(System.in);
+		num = scan.nextInt();
+		count = scan.nextInt();
+		scan.close();
+		selected = new int[count + 1];
+		used = new boolean[num + 1];
+	}
+
+	static void choose(int k) {
 		if (k == count + 1) {
 			for (int i = 1; i <= count; i++) {
-				sb.append(array[i] + " ");
+				sb.append(selected[i] + " ");
 			}
 			sb.append("\n");
 		} else {
-			for (int j = 1; j <= number; j++) {
-				array[k] = j;
-				rec_func(k + 1);
-				array[k] = 0;
+			for (int j = 1; j <= num; j++) {
+				if (used[j]) {
+					continue;
+				}
+				selected[k] = j;
+				used[j] = true;
+				choose(k + 1);
+				selected[k] = 0;
+				used[j] = false;
 			}
 		}
 	}
 
-	static void scan() {
-		Scanner scan = new Scanner(System.in);
-		number = scan.nextInt();
-		count = scan.nextInt();
-		scan.close();
-		array = new int[count + 1];
-	}
-
 	public static void main(String[] args) {
-		scan();
-		rec_func(1);
+		input();
+		choose(1);
 		System.out.println(sb.toString());
 	}
-
 }
