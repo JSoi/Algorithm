@@ -57,18 +57,17 @@ public class N1303 {
 	}
 
 	// 전쟁터의 가로 크기 N, 세로 크기 M(1 ≤ N, M ≤ 100)이 주어진다
-	// 행 개수 : m 열 개수 : n
+	// 행 개수 : m(x) 열 개수 : n(y)
 	static void dfs(int nowX, int nowY, char targetColor) {
 		visit[nowX][nowY] = true;
 		for (int x = 0; x < 4; x++) {
-			for (int y = 0; y < 4; y++) {
-				if (nowX + dx[x] < 0 || nowX + dx[x] >= m || nowY + dy[y] < 0 || nowY + dy[y] >= n
-						|| visit[nowX + dx[x]][nowY + dy[y]] || map[nowX + dx[x]][nowY + dy[y]] != targetColor) {
-					continue;
-				}
-				count++;
-				dfs(nowX + dx[x], nowY + dy[y], targetColor);
+			if (nowX + dx[x] < 0 || nowX + dx[x] >= m || nowY + dy[x] < 0 || nowY + dy[x] >= n
+					|| visit[nowX + dx[x]][nowY + dy[x]] || map[nowX + dx[x]][nowY + dy[x]] != targetColor) {
+				continue;
 			}
+			count++;
+			dfs(nowX + dx[x], nowY + dy[x], targetColor);
+
 		}
 	}
 }
