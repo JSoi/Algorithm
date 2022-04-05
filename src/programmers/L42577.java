@@ -1,21 +1,17 @@
 package programmers;
 
-import java.util.HashSet;
+import java.util.Arrays;
 
 public class L42577 {
 
 	public boolean solution(String[] phone_book) {
-		HashSet<String> set = new HashSet<String>();
-		for (String s : phone_book) {
-			set.add(s);
-		}
-		for (String s : phone_book) {
-			for (String key : set) {
-				if (!s.equals(key) && s.length() < key.length() && key.startsWith(s)) {
-					return false;
-				}
-			}
-		}
-		return true;
+		 Arrays.sort(phone_book);
+         //HashMap mp = new HashMap();
+
+         for(int i=0; i<phone_book.length-1;i++)
+         {
+             if(phone_book[i+1].startsWith(phone_book[i])) {return false;}
+         }
+         return true;
 	}
 }
