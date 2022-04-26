@@ -26,7 +26,7 @@ public class N1005 {
 			for (int k = 0; k < K; k++) {
 				String mLine = br.readLine();
 				conn[Integer.parseInt(mLine.split(" ")[0]) - 1][Integer.parseInt(mLine.split(" ")[1]) - 1] = true;
-				// За->ї­
+				// пїЅпїЅ->пїЅпїЅ
 			}
 			F1005 myc = new F1005(N, K, conn, time);
 			int goal = Integer.parseInt(br.readLine());
