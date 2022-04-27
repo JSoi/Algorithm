@@ -1,5 +1,7 @@
 package baekjoon;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class N1260 {
@@ -19,6 +21,7 @@ public class N1260 {
 		}
 		scan.close();
 		System.out.println(dfs(new boolean[n], "" + start, start - 1).trim());
+		System.out.println(bfs(new boolean[n], start - 1).trim());
 	}
 
 	/**
@@ -26,17 +29,35 @@ public class N1260 {
 	 * 정점 번호가 작은 것을 먼저 방문하고, 더 이상 방문할 수 있는 점이 없는 경우 종료한다. 정점 번호는 1번부터 N번까지이다.
 	 */
 	public static String dfs(boolean[] visit, String out, int index) {
-		String rt = (index + 1) + " ";
 		if (visit[index]) {
 			return "";
 		}
+		visit[index] = true;
+		String rt = (index + 1) + " ";
 		for (int i = 0; i < visit.length; i++) {
 			if (!visit[i] && connect[index][i]) {
-				visit[i] = true;
 				rt += dfs(visit, out + (i + 1), i);
 				continue;
 			}
 		}
 		return rt;
+	}
+
+	public static String bfs(boolean[] visit, int index) {
+		Queue<Integer> q = new LinkedList<Integer>();
+		q.offer(index);
+		String answer = "";
+		visit[index] = true;
+		while (!q.isEmpty()) {
+			int target = q.poll();
+			for (int i = 0; i < visit.length; i++) {
+				if (!visit[i] && connect[target][i]) {
+					q.offer(i);
+					visit[i] = true;
+				}
+			}
+			answer += target + 1 + " ";
+		}
+		return answer;
 	}
 }

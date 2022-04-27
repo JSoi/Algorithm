@@ -34,7 +34,6 @@ public class L42747 {
 			}
 			down += same;
 			up = citations.length - down + same;
-			System.out.println("down  : " + down + " / up : " + up);
 			if (up >= compare && down <= compare)
 				answer = Math.max(answer, compare);
 		}
