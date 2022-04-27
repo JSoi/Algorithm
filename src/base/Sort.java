@@ -123,11 +123,11 @@ public class Sort {
 	}
 
 	static int partition(int[] arr, int left, int right) {
-		int p = arr[(left + right) / 2];
+		int p = arr[(left + right) / 2]; // 피벗을 중앙값으로 잡는다
 		while (left <= right) {
-			while (arr[left] < p)
+			while (arr[left] < p) // 왼쪽에서 피벗보다 큰 값을 찾는다
 				left++;
-			while (arr[right] > p)
+			while (arr[right] > p) // 오른쪽에서 피벗보다 작은 값을 찾는다
 				right--;
 			if (left <= right) {
 				int temp = arr[left];
