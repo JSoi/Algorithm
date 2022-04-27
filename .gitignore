@@ -204,3 +204,19 @@ hs_err_pid*
 replay_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,intellij,java
+/.gradle/buildOutputCleanup/cache.properties
+/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+/.gradle/checksums/checksums.lock
+/.gradle/7.1/dependencies-accessors/dependencies-accessors.lock
+/.gradle/7.1/executionHistory/executionHistory.bin
+/.gradle/7.1/executionHistory/executionHistory.lock
+/.gradle/7.1/fileHashes/fileHashes.bin
+/.gradle/7.1/fileHashes/fileHashes.lock
+/.gradle/7.1/dependencies-accessors/gc.properties
+/.gradle/7.1/gc.properties
+/.gradle/vcs-1/gc.properties
+/gradle/wrapper/gradle-wrapper.properties
+/gradlew
+/gradlew.bat
+/.gradle/7.1/fileChanges/last-build.bin
+/.gradle/buildOutputCleanup/outputFiles.bin
