@@ -1,7 +1,7 @@
 package leetcode;
 
 import java.util.Arrays;
-
+//https://leetcode.com/problems/permutation-in-string/
 public class L567 {
     public boolean checkInclusion(String s1, String s2) {
         int[] check= new int[27];
