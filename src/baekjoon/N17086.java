@@ -11,8 +11,8 @@ import java.util.StringTokenizer;
 public class N17086 {
     static int garo, sero, min, max;
     static int[][] map;
-    final static int[] dg = {0, 0, 1, 1, 1, -1, -1, -1};
-    final static int[] ds = {1, -1, -1, 0, 1, 1, 0, -1};
+    final static int[] dg = {1, -1, 0, 0, 1, 1, -1, -1};
+    final static int[] ds = {1, -1, 1, -1, -1, 0, 1, 0,};
     static boolean[][] visit;
 
     public static void main(String[] args) throws IOException {
@@ -35,21 +35,22 @@ public class N17086 {
                     visit = new boolean[sero][garo];
                     findAnn(i, j);
                     max = Math.max(max, min);
+
                 }
             }
         }
-        System.out.println(min);
+        System.out.println(max);
     }
 
     static void findAnn(int s, int g) {
         Queue<Point> queue = new LinkedList<>();
-        queue.offer(new Point(s, g, 1));
+        queue.offer(new Point(s, g, 0));
         visit[s][g] = true;
         while (!queue.isEmpty()) {
             Point now = queue.poll();
             if (map[now.s][now.g] == 1) {
                 min = Math.min(min, now.count);
-                continue;
+                return;
             }
             for (int i = 0; i < 8; i++) {
                 int ns = now.s + ds[i];
@@ -78,6 +79,15 @@ public class N17086 {
             this.s = s;
             this.g = g;
             this.count = count;
+        }
+
+        @Override
+        public String toString() {
+            return "Point{" +
+                    "s=" + s +
+                    ", g=" + g +
+                    ", count=" + count +
+                    '}';
         }
     }
 }
