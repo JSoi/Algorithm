@@ -1,27 +1,40 @@
 package leetcode;
 
 public class L695 {
-    public int originalColor;
-    public int newColor;
-    public int[][] image;
+    int count;
+    boolean[][] visit;
+    int[] dx = {0, 0, 1, -1};
+    int[] dy = {1, -1, 0, 0};
+    int[][] map;
 
-    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
-        if (image[sr][sc] == newColor) {
-            return image;
+    public int maxAreaOfIsland(int[][] grid) {
+        map = grid;
+        visit = new boolean[grid.length][grid[0].length];
+        count = 0;
+        int area = 0;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                if (map[i][j] == 1 && !visit[i][j]) {
+                    visit[i][j] = true;
+                    count = 0;
+                    dfs(i, j);
+                    area = Math.max(area, count);
+                }
+            }
         }
-        this.originalColor = image[sr][sc];
-        this.newColor = newColor;
-        this.image = image;
-        fill(sr, sc);
-        return image;
+        return area;
     }
 
-    public void fill(int s, int g) {
-        if (s < 0 || g < 0 || s >= image.length || g >= image[0].length || image[s][g] != originalColor) return;
-        image[s][g] = newColor;
-        fill(s + 1, g);
-        fill(s - 1, g);
-        fill(s, g + 1);
-        fill(s, g - 1);
+    public void dfs(int s, int g) {
+        count++;
+        for (int i = 0; i < 4; i++) {
+            int ds = s + dx[i];
+            int dg = g + dy[i];
+            if (ds < 0 || ds >= map.length || dg < 0 || dg >= map[0].length || visit[ds][dg] || map[ds][dg] == 0) {
+                continue;
+            }
+            visit[ds][dg] = true;
+            dfs(ds, dg);
+        }
     }
 }
