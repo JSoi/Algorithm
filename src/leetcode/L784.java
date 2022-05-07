@@ -10,7 +10,7 @@ public class L784 {
             return answer;
         }
         if (s.length() == 1) {
-            if (isChar(s.charAt(0))) {
+            if (Character.isAlphabetic(s.charAt(0))) {
                 answer.add(s.toUpperCase());
                 answer.add(s.toLowerCase());
             } else {
@@ -19,7 +19,7 @@ public class L784 {
             return answer;
         }
         List<String> temp = letterCasePermutation(s.substring(1, s.length()));
-        if (isChar(s.charAt(0))) {
+        if (Character.isAlphabetic(s.charAt(0))) {
             for (String str : temp) {
                 answer.add((s.charAt(0) + "").toUpperCase() + str);
                 answer.add((s.charAt(0) + "").toLowerCase() + str);
@@ -31,12 +31,5 @@ public class L784 {
         }
 
         return answer;
-    }
-
-    boolean isChar(char c) {
-        if (c >= '0' && c <= '9') {
-            return false;
-        }
-        return true;
     }
 }
