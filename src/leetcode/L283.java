@@ -1,18 +1,17 @@
 package leetcode;
 
-import org.junit.Assert;
-import org.junit.Test;
 
-import java.util.ArrayList;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 public class L283 {
     @Test
     public void myTest() {
         int nums[] = new int[]{0, 1, 0, 3, 12};
         moveZeroes3(nums);
-        Assert.assertTrue(Arrays.equals(nums, new int[]{1, 3, 12, 0, 0}));
+        Assertions.assertTrue(Arrays.equals(nums, new int[]{1, 3, 12, 0, 0}));
     }
 
     public void moveZeroes(int[] nums) { // 시간이 너무 오래 걸린다 ... 그래서 수정

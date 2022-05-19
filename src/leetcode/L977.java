@@ -1,7 +1,7 @@
 package leetcode;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -13,7 +13,7 @@ public class L977 {
     public void mytest() {
         int input[] = new int[]{-7, -3, 2, 3, 11};
         int expect[] = new int[]{4, 9, 9, 49, 121};
-        Assert.assertTrue(Arrays.equals(sortedSquares(input),expect));
+        Assertions.assertTrue(Arrays.equals(sortedSquares(input),expect));
 
     }
 
