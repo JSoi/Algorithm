@@ -10,7 +10,6 @@ public class addTwoNumbers {
     public static void main(String[] args) {
 
     }
-
     @Test
     public void myTest() {
         Solution sol = new Solution();
