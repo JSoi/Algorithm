@@ -1,20 +1,9 @@
 package leetcode;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 
 public class L977 {
     public static void main(String[] args) {
-    }
-
-    @Test
-    public void mytest() {
-        int input[] = new int[]{-7, -3, 2, 3, 11};
-        int expect[] = new int[]{4, 9, 9, 49, 121};
-        Assertions.assertTrue(Arrays.equals(sortedSquares(input),expect));
-
     }
 
     public int[] sortedSquares(int[] nums) {

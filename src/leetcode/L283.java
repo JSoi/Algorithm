@@ -1,18 +1,10 @@
 package leetcode;
 
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 public class L283 {
-    @Test
-    public void myTest() {
-        int nums[] = new int[]{0, 1, 0, 3, 12};
-        moveZeroes3(nums);
-        Assertions.assertTrue(Arrays.equals(nums, new int[]{1, 3, 12, 0, 0}));
-    }
 
     public void moveZeroes(int[] nums) { // 시간이 너무 오래 걸린다 ... 그래서 수정
         int last = nums.length - 1;

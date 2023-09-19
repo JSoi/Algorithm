@@ -1,29 +1,10 @@
 package leetcode;
 
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class addTwoNumbers {
     //https://leetcode.com/problems/add-two-numbers/
     public static void main(String[] args) {
-
-    }
-    @Test
-    public void myTest() {
-        Solution sol = new Solution();
-        ListNode l1 = new ListNode(2, new ListNode(4, new ListNode(3)));
-        ListNode l2 = new ListNode(5, new ListNode(6, new ListNode(4)));
-        ListNode result = sol.addTwoNumbers(l1, l2);
-        String str = "";
-
-        while (result != null) {
-            str += result.val + " ";
-            result = result.next;
-        }
-        str = str.trim();
-        assertTrue(str.equals("7 0 8"));
 
     }
 

@@ -1,6 +1,5 @@
 package programmers;
 
-import org.junit.jupiter.api.Assertions;
 
 public class L72410_2 {
 

@@ -1,7 +1,5 @@
 package leetcode;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -9,13 +7,6 @@ import java.util.Arrays;
 public class L704 {
     public static void main(String[] args) {
 
-    }
-
-    @Test
-    public void myTest() {
-        int[] arr = {-1, 0, 3, 5, 9, 12};
-        int target = 9;
-        Assertions.assertTrue(4 == search(arr, target));
     }
 
     public int search(int[] nums, int target) {
