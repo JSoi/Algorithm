@@ -3,29 +3,18 @@ package programmers;
 import java.util.*;
 
 public class L152996 {
-    public static final int[] dist = {2, 3, 4};
-    // weight, index
-    public static Map<Integer, Set<Integer>> setMap = new HashMap<>();
-
     public static long solution(int[] weights) {
-        int answer = 0;
         Arrays.sort(weights);
-        for (int k = 0; k < weights.length; k++) {
-            answer += getElement(weights[k], k);
-            for(int d : dist){
-                setMap.computeIfAbsent(weights[k] * d, key -> new HashSet<>()).add(k);
-            }
+        long answer = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int weight : weights) {
+            if (map.containsKey(weight)) answer += map.get(weight);
+            if ((weight * 2) % 3 == 0 && map.containsKey((weight * 2) / 3)) answer += map.get((weight * 2) / 3);
+            if (weight % 2 == 0 && map.containsKey(weight / 2)) answer += map.get(weight / 2);
+            if ((weight * 3) % 4 == 0 && map.containsKey((weight * 3) / 4)) answer += map.get((weight * 3) / 4);
+            map.put(weight, map.getOrDefault(weight, 0) + 1);
         }
         return answer;
-    }
-
-    public static int getElement(int original, int index) {
-        Set<Integer> elements = new HashSet<>();
-        for(int d : dist){
-            elements.addAll(setMap.getOrDefault(original * d, Set.of()));
-        }
-        elements.remove(index);
-        return elements.size();
     }
 
     public static void main(String[] args) {
