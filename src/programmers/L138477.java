@@ -1,6 +1,7 @@
 package programmers;
 
 import java.util.*;
+
 public class L138477 {
     public static void main(String[] args) {
         int[] solution = new L138477().solution(3, new int[]{10, 100, 20, 150, 1, 100, 200});
@@ -10,13 +11,13 @@ public class L138477 {
     public int[] solution(int k, int[] score) {
         int[] answer = new int[score.length];
         int index = 0;
-        LinkedList<Integer> queue = new LinkedList<>();
+        Queue<Integer> queue = new PriorityQueue<>();
         for (int s : score) {
-            add(queue, s);
+            queue.add(s);
             if (queue.size() > k) {
-                queue.removeFirst();
+                queue.poll();
             }
-            answer[index++] = queue.get(0);
+            answer[index++] = queue.peek();
         }
         return answer;
     }
