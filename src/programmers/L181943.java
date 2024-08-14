@@ -14,4 +14,7 @@ public class L181943 {
         return myStr.substring(0, s + 1) + replaceStr + myStr.substring(s + replaceStr.length() + 1);
     }
 
+    public String solution2(String myStr, String replaceStr, int s) {
+        return myStr.substring(0, s) + replaceStr + myStr.substring(s + replaceStr.length());
+    }
 }
