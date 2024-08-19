@@ -12,27 +12,25 @@ public class L72416 {
     }
 
     static int[] tree;
+    static int[] leader;
     static int[][] cost;
     static int[] loss;
-    static Set<Integer> leaders = new HashSet<>();
 
     public static int solution(int[] sales, int[][] links) {
         loss = sales;
         tree = IntStream.range(0, sales.length).map(i -> -1).toArray();
         cost = IntStream.range(0, sales.length).mapToObj(i -> new int[]{Integer.MAX_VALUE, Integer.MAX_VALUE}).toArray(int[][]::new);
+        leader = IntStream.range(0, sales.length).map(i -> i == 0 ? 0 : -1).toArray();
         for (int[] link : links) {
-            leaders.add(link[0] - 1);
             tree[link[1] - 1] = link[0] - 1;
+            leader[link[0] - 1] = link[0] - 1;
         }
         dp(0);
-        for (int[] c : cost) {
-            System.out.println(Arrays.toString(c));
-        }
         return Math.min(cost[0][0], cost[0][1]);
     }
 
     private static void dp(int start) {
-        if (!leaders.contains(start)) {
+        if (leader[start] == -1) { // leaf
             cost[start][0] = 0;
             cost[start][1] = loss[start];
             return;
