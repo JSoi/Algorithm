@@ -27,7 +27,8 @@ public class L72416 {
             teamMap.putIfAbsent(link[0] - 1, new HashSet<>());
             teamMap.get(link[0] - 1).add(link[1] - 1);
         }
-        dfs(0);
+//        dfs(0);
+        dp(0);
         return Math.min(cost[0][0], cost[0][1]);
     }
 
@@ -60,5 +61,26 @@ public class L72416 {
             cost[current][0] = withoutLeader;
             cost[current][1] = withLeader;
         }
+    }
+
+    static void dp(int start) {
+        if (!teamMap.containsKey(start)) { // leaf
+            cost[start][0] = 0;
+            cost[start][1] = loss[start];
+            return;
+        }
+        int sum = 0;
+        int minDiff = Integer.MAX_VALUE;
+        boolean childParticipate = false;
+        for (int child : teamMap.get(start)) {
+            dp(child);
+            childParticipate |= cost[child][1] <= cost[child][0];
+            sum += Math.min(cost[child][0], cost[child][1]);
+            minDiff = Math.min(minDiff, cost[child][1] - cost[child][0]);
+        }
+        int withLeader = loss[start] + sum;
+        int withoutLeader = childParticipate ? sum : sum + minDiff;
+        cost[start][0] = withoutLeader;
+        cost[start][1] = withLeader;
     }
 }
