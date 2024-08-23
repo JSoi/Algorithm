@@ -14,19 +14,10 @@ public class L42892 {
         for (int[] n : nodeinfo) {
             nodeList.add(new Node(n[0], n[1], idx++));
         }
-        Collections.sort(nodeList);
-
+        nodeList.sort((n1, n2) -> n2.y - n1.y == 0 ? n1.x - n2.x : n2.y - n1.y);
         Node rootNode = nodeList.get(0);
         for (int i = 1; i < nodeList.size(); i++) {
-            Node child = nodeList.get(i);
-            for (int j = 0; j < i; j++) {
-                Node parent = nodeList.get(j);
-                boolean isLeft = parent.x > child.x;
-                if (parent.checkChild(child) && (isLeft ? parent.leftChild == null : parent.rightChild == null)) {
-                    child.addParent(parent, isLeft);
-                    break;
-                }
-            }
+            rootNode.addChild(nodeList.get(i));
         }
         return new int[][]{rootNode.preorderTraversal(), rootNode.postorderTraversal()};
     }
@@ -43,17 +34,22 @@ public class L42892 {
             this.index = index;
         }
 
-        public boolean checkChild(Node child) {
-            if (child.y > this.y) {
-                return false;
+        public void addChild(Node child) {
+            if (this.x > child.x) {
+                if (this.leftChild == null) {
+                    this.leftChild = child;
+                    child.parent = this;
+                } else {
+                    this.leftChild.addChild(child);
+                }
+            } else {
+                if (this.rightChild == null) {
+                    this.rightChild = child;
+                    rightChild.parent = this;
+                } else {
+                    this.rightChild.addChild(child);
+                }
             }
-            if (this.leftChild != null && this.rightChild != null) {
-                return false;
-            }
-            if (this.parent == null) {
-                return this.y > child.y;
-            }
-            return this.x < this.parent.x ? child.x < this.parent.x : child.x > this.parent.x;
         }
 
         public void addChild(Node child, boolean left) {
@@ -64,10 +60,6 @@ public class L42892 {
             }
         }
 
-        public void addParent(Node parent, boolean left) {
-            this.parent = parent;
-            this.parent.addChild(this, left);
-        }
 
         public int[] preorderTraversal() {
             Queue<Integer> queue = new LinkedList<>();
