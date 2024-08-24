@@ -7,6 +7,7 @@ public class L159993 {
     static char[][] mapChar;
     static int[][] point = new int[4][];
     static int answer = -1;
+    static boolean[][] visited;
     static final int[][] directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
     public static int solution(String[] maps) {
@@ -26,36 +27,39 @@ public class L159993 {
                 point[3] = new int[]{i, maps[i].indexOf("E")};
             }
         }
-        System.out.println(answer);
         int toLeverAndFinal;
-        travel(point[0][0], point[0][1], point[3][0], point[3][1], new boolean[maps.length][maps[0].length()], 0);
+        visited = new boolean[maps.length][maps[0].length()];
+        visited[point[0][0]][point[0][1]] = true;
+        travel(point[0][0], point[0][1], point[2][0], point[2][1], 0);
         if (answer == -1) {
             return answer;
         }
         toLeverAndFinal = answer;
         answer = -1;
-        travel(point[3][0], point[3][1], point[2][0], point[2][1], new boolean[maps.length][maps[0].length()], 0);
+        visited = new boolean[maps.length][maps[0].length()];
+        visited[point[2][0]][point[2][1]] = true;
+        travel(point[2][0], point[2][1], point[3][0], point[3][1], 0);
         if (answer == -1) {
             return answer;
         }
         toLeverAndFinal += answer;
-        System.out.println(toLeverAndFinal);
         return toLeverAndFinal;
     }
 
-    public static void travel(int h, int v, int endH, int endV, boolean[][] visited, int walkCount) {
-        visited[h][v] = true;
-        if (h == endH && v == endV && visited[endH][endV]) {
+    public static void travel(int h, int v, int endH, int endV, int walkCount) {
+        if (h == endH && v == endV) {
             answer = answer == -1 ? walkCount : Math.min(answer, walkCount);
             return;
         }
         for (int[] dir : directions) {
             int nextH = h + dir[0];
             int nextV = v + dir[1];
-            if (nextH < 0 || nextH >= mapChar.length || nextV < 0 || nextV >= mapChar[0].length || visited[nextH][nextV]) {
+            if (nextH < 0 || nextH >= mapChar.length || nextV < 0 || nextV >= mapChar[0].length || visited[nextH][nextV]|| mapChar[nextH][nextV] == 'X') {
                 continue;
             }
-            travel(nextH, nextV, endH, endV, visited, walkCount + 1);
+            visited[nextH][nextV] = true;
+            travel(nextH, nextV, endH, endV, walkCount + 1);
+            visited[nextH][nextV] = false;
         }
     }
 
