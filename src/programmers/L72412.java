@@ -19,12 +19,10 @@ public class L72412 {
 
     public static int[] solution(String[] info, String[] query) {
         int[] answer = new int[query.length];
-
         map = new HashMap<>();
         String[][] sortedInfo =
                 Arrays.stream(info).map(i -> i.replace(" and ", " ").split(" "))
                         .sorted((s1, s2) -> Integer.parseInt(s1[4]) - Integer.parseInt(s2[4])).toArray(String[][]::new);
-
         for (String[] i : sortedInfo) {
             createKeys(0, "", i);
         }
@@ -33,8 +31,7 @@ public class L72412 {
             String[] split = string.replace(" and ", " ").split(" ");
             String joinCondition = String.join("", split).replaceAll("[0-9]", "");
 //            System.out.println(map.get(joinCondition));
-            answer[index++] = count(map.get(joinCondition), Integer.parseInt(split[4]));
-
+            answer[index++] = map.get(joinCondition) == null ? 0 : count(map.get(joinCondition), Integer.parseInt(split[4]));
         }
         return answer;
     }
