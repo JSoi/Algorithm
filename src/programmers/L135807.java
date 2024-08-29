@@ -1,7 +1,6 @@
 package programmers;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class L135807 {
     public static void main(String[] args) {
@@ -14,21 +13,21 @@ public class L135807 {
     }
 
     public int solution(int[] arrayA, int[] arrayB) {
-        List<Integer> integers = Arrays.stream(arrayA).boxed().collect(Collectors.toList());
-        List<Integer> answer = getYaksu(integers.get(0));
-        for (int i = 1; i < integers.size(); i++) {
+        return Math.max(solve(arrayA, arrayB), solve(arrayB, arrayA));
+    }
+
+    private int solve(int[] arrayA, int[] arrayB) {
+        List<Integer> answer = getYaksu(arrayA[0]);
+        for (int i = 1; i < arrayA.length; i++) {
             if (answer.isEmpty()) {
                 return 0;
             }
-            Set<Integer> miniYaksu = new HashSet<>(getYaksu(integers.get(i)));
-            answer.removeIf(a -> !miniYaksu.contains(a));
+            int finalI = i;
+            answer.removeIf(a -> arrayA[finalI] % a != 0);
         }
-        System.out.println(answer);
-        HashSet<Integer> bSet = new HashSet<>();
         for (int i : arrayB) {
-            bSet.addAll(getYaksu(i));
+            answer.removeIf(a -> i % a == 0);
         }
-        answer.removeIf(bSet::contains);
         return answer.isEmpty() ? 0 : answer.get(answer.size() - 1);
     }
 
