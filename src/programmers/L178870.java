@@ -14,25 +14,28 @@ public class L178870 {
     }
 
     public int[] solution(int[] sequence, int k) {
-        int start = -1;
-        int end = -1;
-        for (int i = 0; i < sequence.length; i++) {
-            int[] sum = new int[sequence.length];
-            sum[i] = sequence[i];
-            if (sum[i] == k) {
-                return new int[]{i, i};
-            }
-            for (int j = i + 1; j < sequence.length; j++) {
-                sum[j] = sum[j - 1] + sequence[j];
-                if (sum[j] == k) {
-                    if (start == -1 || ((end - start) > (j - i))) {
-                        start = i;
-                        end = j;
-                    }
-                    break;
+        int start = 0;
+        int end = 0;
+        int sum = sequence[0];
+        int shortestLength = Integer.MAX_VALUE;
+        int[] answer = new int[2];
+        // end 기준으로 진행
+        while (end < sequence.length) {
+            // 합일 때
+            if (sum == k) {
+                int diff = end - start + 1;
+                if (shortestLength > diff) {
+                    shortestLength = diff;
+                    answer = new int[]{start, end};
                 }
+                sum -= sequence[start++];
+            } else if (sum < k) { // 합이 작을 때
+                end++;
+                sum += end < sequence.length ? sequence[end] : 0;
+            } else { // 합보다 클 때
+                sum -= sequence[start++];
             }
         }
-        return new int[]{start, end};
+        return answer;
     }
 }
