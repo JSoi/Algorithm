@@ -12,24 +12,19 @@ public class L12914 {
 //        Assertions.check(solution2, 3L);
     }
 
-    static long arrival;
-    static long[] arr;
     public long solution(int n) {
-        arr = new long[n + 1];
-        arrival = n;
-        for (int i = n - 1; i >= 0; i--) {
-            jump(i);
+        if (n <= 2) {
+            return n;
         }
-        return arr[0];
+        long[] arr = new long[n + 1];
+        for (int i = 0; i < arr.length; i++) {
+            if (i <= 2) {
+                arr[i] = i;
+            } else {
+                arr[i] = (arr[i - 1] + arr[i - 2]) % 1234567;
+            }
+        }
+        return arr[n];
     }
 
-    private static void jump(int index) {
-        if (index == arrival - 1 || index == arrival - 2) {
-            arr[index] = arrival - index;
-            return;
-        }
-        long afterOneStep = index + 1 >= arrival ? 0 : arr[index + 1];
-        long afterTwoStep = index + 2 >= arrival ? 0 : arr[index + 2];
-        arr[index] = afterOneStep + afterTwoStep;
-    }
 }
