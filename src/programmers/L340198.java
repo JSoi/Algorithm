@@ -8,29 +8,25 @@ public class L340198 {
         System.out.println(solution);
     }
 
-    static int[][] lengthMatrix;
-    static String[][] map;
-
-    public static int solution(int[] mats, String[][] park) {
-        map = park;
-        lengthMatrix = new int[park.length][park[0].length];
+    public int solution(int[] mats, String[][] park) {
+        int[][] lengthMatrix = new int[park.length][park[0].length];
         int maxLen = 0;
         for (int r = 0; r < park.length; r++) {
             for (int c = 0; c < park[0].length; c++) {
-                lengthMatrix[r][c] = park[r][c].equals("-1") ? 1 : 0;
-                if (park[r][c].equals("-1")) {
-                    map[r][c] = "-";
-                    if (r - 1 < 0 || c - 1 < 0) {
-                        continue;
-                    }
-                    lengthMatrix[r][c] +=
-                            Math.min(Math.min(lengthMatrix[r - 1][c], lengthMatrix[r - 1][c - 1]), lengthMatrix[r][c - 1]);
-                    maxLen = Math.max(maxLen, lengthMatrix[r][c]);
+                if (!park[r][c].equals("-1")) { // 이용 불가 좌석
+                    continue;
                 }
+                int matrixValue = 1;
+                if (r - 1 >= 0 && c - 1 >= 0) {
+                    // n*n 좌석 생성 가능 시 북, 서, 북서 방향의 값 참조해서 값 할당
+                    // 그 외의 경우에는 정사각형이 생성되지 않으므로 matrixValue의 초기값에서 새 값을 할당하지 않는다
+                    matrixValue = 1 + Math.min(Math.min(lengthMatrix[r - 1][c], lengthMatrix[r - 1][c - 1]), lengthMatrix[r][c - 1]);
+                }
+                lengthMatrix[r][c] = matrixValue;
+                maxLen = Math.max(maxLen, matrixValue);
             }
         }
         int finalMaxLen = maxLen;
         return Arrays.stream(mats).filter(m -> m <= finalMaxLen).max().orElse(-1);
     }
-
 }
