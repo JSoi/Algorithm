@@ -20,11 +20,16 @@ public class L12923 {
         if (input == 1) {
             return 0;
         }
-        for (long i = input / 2; i >= 2; i--) {
+        long answer = 1;
+        for (long i = 2; i <= (long) Math.sqrt(input); i++) {
             if (input % i == 0) {
-                return i;
+                if (input / i > 10000000) {
+                    answer = i;
+                } else {
+                    return input / i;
+                }
             }
         }
-        return 1;
+        return answer;
     }
 }
