@@ -6,7 +6,14 @@ import java.util.Queue;
 
 public class L67259 {
     public static void main(String[] args) {
-        int solution = new L67259().solution(new int[][]{{0, 0, 0, 0, 0, 0, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0, 1}, {0, 0, 1, 0, 0, 0, 1, 0}, {0, 1, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 0, 0, 0, 0, 0}});
+//        int solution = new L67259().solution(new int[][]{{0, 0, 0, 0, 0, 0, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0, 1}, {0, 0, 1, 0, 0, 0, 1, 0}, {0, 1, 0, 0, 0, 1, 0, 0}, {1, 0, 0, 0, 0, 0, 0, 0}});
+        int solution = new L67259().solution(
+                new int[][]{
+                        {0, 0, 0, 0, 0},
+                        {0, 1, 1, 1, 0},
+                        {0, 0, 1, 0, 0},
+                        {1, 0, 0, 0, 1},
+                        {1, 1, 1, 0, 0}});
         System.out.println("solution = " + solution);
     }
 
@@ -20,18 +27,10 @@ public class L67259 {
             Arrays.fill(c, Integer.MAX_VALUE);
         }
         Queue<Node> queue = new LinkedList<>();
-        for (int i = 0; i < 4; i++) {
-            int[] d = directions[i];
-            if (isInBoundary(board, d[0], d[1])) {
-                cost[d[0]][d[1]] = 100;
-                visitedWithDirection[d[0]][d[1]][i] = true;
-                queue.offer(new Node(d[0], d[1], 100, i, 1));
-            }
-        }
+        queue.offer(new Node(0, 0, 0, -1, 0));
 
         while (!queue.isEmpty()) {
             Node latest = queue.poll();
-            visitedWithDirection[latest.r][latest.c][latest.latestDirection] = true;
             if (latest.r == board.length - 1 && latest.c == board[0].length - 1) {
                 answer = Math.min(answer, latest.cost);
                 continue;
@@ -41,11 +40,12 @@ public class L67259 {
                 int nextR = latest.r + d[0];
                 int nextC = latest.c + d[1];
                 int nextCount = latest.count + 1;
-                int nextCost = latest.cost + (i == latest.latestDirection ? 100 : 600);
+                int nextCost = latest.cost + ((latest.latestDirection == i || latest.latestDirection == -1) ? 100 : 600);
                 if (!isInBoundary(board, nextR, nextC) || board[nextR][nextC] == 1 ||
                         (visitedWithDirection[nextR][nextC][i] && cost[nextR][nextC] < nextCost)) {
                     continue;
                 }
+                visitedWithDirection[nextR][nextC][i] = true;
                 cost[nextR][nextC] = Math.min(nextCost, cost[nextR][nextC]);
                 queue.offer(new Node(nextR, nextC, nextCost, i, nextCount));
             }
