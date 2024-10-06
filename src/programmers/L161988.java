@@ -17,9 +17,8 @@ public class L161988 {
         dp[sequence.length - 1][1] += sequence[sequence.length - 1];
         long max = Long.MIN_VALUE;
         for (int i = dp.length - 2; i >= 0; i--) {
-            dp[i][0] = Math.max(-sequence[i], Math.max(0, dp[i + 1][1]) - sequence[i]);
-            dp[i][1] = Math.max(sequence[i], sequence[i] + Math.max(0, dp[i + 1][0]));
-//            System.out.println(String.format("%d -> %d %d", i, dp[i][0], dp[i][1]));
+            dp[i][0] = Math.max(0, dp[i + 1][1]) - sequence[i];
+            dp[i][1] = Math.max(0, dp[i + 1][0]) + sequence[i];
             max = Math.max(max, Math.max(dp[i][0], dp[i][1]));
         }
         return max;
