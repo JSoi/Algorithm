@@ -12,38 +12,31 @@ public class L12904 {
 
     public int solution(String s) {
         int len = s.length();
-        int[][] pelindrome = new int[len][len];
-        for (int[] p : pelindrome) {
+        int[][] palindrome = new int[len][len];
+        for (int[] p : palindrome) {
             Arrays.fill(p, -1);
         }
         for (int mid = 0; mid < s.length(); mid++) {
-            pelindrome[mid][mid] = 1;
+            palindrome[mid][mid] = 1;
         }
-        int max = 0;
-        for (int from = 0; from < s.length(); from++) {
-            for (int to = from; to < s.length(); to++) {
-                String targetStr = s.substring(from, to + 1);
-                if (isPalindrome(targetStr)) {
-                    pelindrome[from][to] = pelindrome[to][from] = targetStr.length();
-                    max = Math.max(max, targetStr.length());
+        int max = 1;
+        for (int from = len - 1; from >= 0; from--) {
+            for (int to = from + 1; to < len; to++) {
+                if (s.charAt(from) != s.charAt(to)) {
+                    continue;
                 }
+                int result = -1;
+                if (to - from == 1) {
+                    result = 2;
+                } else if (palindrome[from + 1][to - 1] != -1) {
+                    result = palindrome[from + 1][to - 1] + 2;
+                }
+                max = Math.max(max, result);
+                palindrome[from][to] = result;
             }
         }
-//        Arrays.stream(pelindrome).map(Arrays::toString).forEach(System.out::println);
+//        Arrays.stream(palindrome).map(Arrays::toString).forEach(System.out::println);
         return max;
-    }
-
-    boolean isPalindrome(String s) {
-        int len = s.length();
-        if (len == 1) {
-            return true;
-        }
-        for (int i = 0; i < (len + 1) / 2; i++) {
-            if (s.charAt(i) != s.charAt(len - i - 1)) {
-                return false;
-            }
-        }
-        return true;
     }
 
 }
