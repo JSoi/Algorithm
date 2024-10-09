@@ -17,13 +17,11 @@ public class L121690 {
     static final int[][] jumpDirections = new int[][]{{-2, 0}, {2, 0}, {0, 2}, {0, -2}};
     static int[][][] cost;
     static boolean[][] map;
-    static int answer;
 
     public int solution(int n, int m, int[][] hole) {
         // n : width, m : height
         cost = new int[m][n][2];
         map = new boolean[m][n];
-        answer = MAX;
         for (boolean[] bArr : map) {
             Arrays.fill(bArr, true);
         }
@@ -37,7 +35,8 @@ public class L121690 {
         }
         cost[m - 1][0][0] = cost[m - 1][0][1] = 0;
         findPath(m - 1, 0);
-        return answer == MAX ? -1 : answer;
+        int val = Math.min(cost[0][n - 1][0], cost[0][n - 1][1]);
+        return val == MAX ? -1 : val;
     }
 
     private static void findPath(int r, int c) {
@@ -46,7 +45,6 @@ public class L121690 {
         while (!queue.isEmpty()) {
             Node latest = queue.poll();
             if (latest.r == 0 && latest.c == map[0].length - 1) {
-                answer = Math.min(answer, latest.cost);
                 continue;
             }
             int nCost = latest.cost + 1;
