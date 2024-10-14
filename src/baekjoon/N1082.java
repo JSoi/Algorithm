@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class N1082 {
-    private static String answer = "";
     private static int[] rooms;
+    private static String[] dp;
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -29,39 +29,55 @@ public class N1082 {
                 moneySet.add(rooms[i]);
             }
         }
-        travel(roomCount - 1, "", money);
-        System.out.println(answer);
+        dp = new String[money + 1];
+        travel(money); // n -> [1,50]
+        String max = dp[money];
+        for (int i = roomCount - 1; i >= 0; i--) {
+            if (rooms[i] == -1 || money - rooms[i] < 0) {
+                continue;
+            }
+            String temp = trimZero(i + dp[money - rooms[i]]);
+            if (larger(temp, trimZero(max))) {
+                max = temp;
+            }
+        }
+        System.out.println(max);
         reader.close();
     }
 
-    private static void travel(int index, String result, int leftMoney) {
-//        System.out.println(index + " | " + result + " | " + leftMoney);
+    private static String travel(int leftMoney) {
         if (leftMoney < 0) {
-            return;
+            return "";
         }
-        for (int i = index; i >= 0; i--) {
-            if (rooms[i] == -1 || leftMoney < rooms[i]) {
-                answer = larger(answer, result);
-                continue;
+        if (dp[leftMoney] != null) {
+            return dp[leftMoney];
+        }
+        String result = "";
+        for (int i = rooms.length - 1; i >= 0; i--) {
+            if (rooms[i] != -1 && leftMoney >= rooms[i]) {
+                String nextResult = travel(leftMoney - rooms[i]);
+                result = larger(result, i + nextResult) ? result : i + nextResult;
             }
-            travel(i, result + i, leftMoney - rooms[i]);
         }
+        dp[leftMoney] = result;
+        return result;
     }
 
-    private static String larger(String s1, String s2) {
-        s1 = s1.replaceFirst("^0+", "");
-        s2 = s2.replaceFirst("^0+", "");
-        s1 = s1.isEmpty() ? "0" : s1;
-        s2 = s2.isEmpty() ? "0" : s2;
+    private static String trimZero(String s1) {
+        String result = s1.replaceFirst("^0+", "");
+        return result.isEmpty() ? "0" : result;
+    }
+
+    private static boolean larger(String s1, String s2) {
         if (s1.length() != s2.length()) {
-            return s1.length() > s2.length() ? s1 : s2;
+            return s1.length() > s2.length();
         }
         for (int i = 0; i < s1.length(); i++) {
             if (s1.charAt(i) == s2.charAt(i)) {
                 continue;
             }
-            return s1.charAt(i) > s2.charAt(i) ? s1 : s2;
+            return s1.charAt(i) > s2.charAt(i);
         }
-        return s1;
+        return true;
     }
 }
