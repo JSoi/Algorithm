@@ -18,6 +18,7 @@ public class L148652 {
     static long[] oneCountArr;
     static long start;
     static long end;
+
     public static int solution(int n, long fromInclusive, long toInclusive) {
         lenArr = new long[n + 1];
         oneCountArr = new long[n + 1];
@@ -31,40 +32,28 @@ public class L148652 {
             len *= 5;
             oneCount *= 4;
         }
-        return (int) find(fromInclusive, toInclusive, n, 0);
+        return (int) find(n, fromInclusive, toInclusive);
     }
 
-    private static long find(long l, long r, int n, int bundleIndex) {
-        if (bundleIndex == 2) {
-            return 0;
-        }
-//        System.out.println(l + " - " + r + " - " + bundleIndex);
-
-        long totalCount = lenArr[n];
-        long oneCount = oneCountArr[n];
-        long bundleCount = totalCount / 5;
-        long from = bundleCount * bundleIndex + 1;
-        long to = bundleCount * (bundleIndex + 1);
-
-        if (end < from || to < start) {
-            return 0;
-        }
+    private static long find(int n, long s, long e) {
         if (n == 0) {
             return 1;
         }
-        if (start <= from && end >= to) {
-            return oneCount;
-        }
+        long totalCount = lenArr[n];
+        long bundleCount = totalCount / 5;
 
         long answer = 0;
         for (int i = 0; i < 5; i++) {
-            if(i == 2){
+            long bundleStart = bundleCount * i + 1;
+            long bundleEnd = bundleCount * (i + 1);
+            if (i == 2 || e < bundleStart || s > bundleEnd) {
                 continue;
             }
-            long s = bundleCount * i + 1;
-            long e = bundleCount * (i + 1);
-//            System.out.println(String.format("%d %d", s,e));
-            answer += find(s,e, n - 1, i);
+            if (s <= bundleStart && e >= bundleEnd) {
+                answer += oneCountArr[n] / 4;
+            } else {
+                answer += find(n - 1, Math.max(bundleStart, s) - i * bundleCount, Math.min(e, bundleEnd) - i * bundleCount);
+            }
         }
         return answer;
     }
