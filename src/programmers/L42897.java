@@ -30,4 +30,16 @@ public class L42897 {
         }
         return p;
     }
+
+    public int rob(int[] money) {
+        int len = money.length;
+        int[][] dp = new int[2][len]; // 0 : without 1st house , 2 : with 1st house
+        dp[1][0] = dp[1][1] = money[0];
+        dp[0][1] = money[1];
+        for (int i = 2; i < len; i++) {
+            dp[0][i] = Math.max(dp[0][i - 2] + money[i], dp[0][i - 1]);
+            dp[1][i] = Math.max(dp[1][i - 2] + money[i], dp[1][i - 1]);
+        }
+        return Math.max(dp[1][len - 2], dp[0][len - 1]);
+    }
 }
