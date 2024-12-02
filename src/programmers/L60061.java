@@ -12,7 +12,9 @@ public class L60061 {
     public static void main(String[] args) {
         int[][] solution = new L60061().solution(
                 5,
-                new int[][]{{1, 0, 0, 1}, {1, 1, 1, 1}, {2, 1, 0, 1}, {2, 2, 1, 1}, {5, 0, 0, 1}, {5, 1, 0, 1}, {4, 2, 1, 1}, {3, 2, 1, 1}}
+                new int[][]{
+                        {0, 0, 0, 1}, {2, 0, 0, 1}, {4, 0, 0, 1}, {0, 1, 1, 1}, {1, 1, 1, 1}, {2, 1, 1, 1}, {3, 1, 1, 1}, {2, 0, 0, 0}, {1, 1, 1, 0}, {2, 2, 0, 1}
+                }
         );
         Arrays.stream(solution).map(Arrays::toString).forEach(System.out::println);
 
@@ -27,60 +29,21 @@ public class L60061 {
             int y = build[1];
             int type = build[2];
             boolean isBuild = build[3] == 1;
-
             Node current = new Node(x, y);
-
-            if (type == BO) {
-                if (isBuild) {
-                    if (canBuildBo(current, stickSet, boSet)) {
-                        boSet.add(current);
-                    }
-                } else {
-                    if (canRemoveBo(current, stickSet, boSet)) {
-                        boSet.remove(current);
-                    }
+            Set<Node> targetSet = type == BO ? boSet : stickSet;
+            if (isBuild) {
+                targetSet.add(current);
+                if (!isAvailable(boSet, stickSet)) {
+                    targetSet.remove(current);
                 }
-            } else { // type == STICK
-                if (isBuild) {
-                    if (canBuildStick(current, stickSet, boSet)) {
-                        stickSet.add(current);
-                    }
-                } else {
-                    if (canRemoveStick(current, stickSet, boSet)) {
-                        stickSet.remove(current);
-                    }
+            } else {
+                targetSet.remove(current);
+                if (!isAvailable(boSet, stickSet)) {
+                    targetSet.add(current);
                 }
             }
         }
-
         return buildAnswer(boSet, stickSet);
-    }
-
-    private boolean canBuildBo(Node node, Set<Node> stickSet, Set<Node> boSet) {
-        int x = node.x, y = node.y;
-        return stickSet.contains(new Node(x, y - 1)) || stickSet.contains(new Node(x + 1, y - 1)) ||
-                (boSet.contains(new Node(x - 1, y)) && boSet.contains(new Node(x + 1, y)));
-    }
-
-    private boolean canRemoveBo(Node node, Set<Node> stickSet, Set<Node> boSet) {
-        int x = node.x, y = node.y;
-        Node leftBo = new Node(x - 1, y);
-        Node rightBo = new Node(x + 1, y);
-        return !(boSet.contains(leftBo) && !stickSet.contains(new Node(x - 1, y - 1))) &&
-                !(boSet.contains(rightBo) && !stickSet.contains(new Node(x + 1, y - 1)));
-    }
-
-    private boolean canBuildStick(Node node, Set<Node> stickSet, Set<Node> boSet) {
-        int x = node.x, y = node.y;
-        return y == 0 || stickSet.contains(new Node(x, y - 1)) || boSet.contains(new Node(x - 1, y));
-    }
-
-    private boolean canRemoveStick(Node node, Set<Node> stickSet, Set<Node> boSet) {
-        int x = node.x, y = node.y;
-        Node leftBo = new Node(x - 1, y + 1);
-        Node rightBo = new Node(x, y + 1);
-        Node higherStick = new Node(x, y + 1);
-        return boSet.contains(leftBo) && boSet.contains(rightBo) && !stickSet.contains(higherStick);
     }
 
     private int[][] buildAnswer(Set<Node> boSet, Set<Node> stickSet) {
@@ -97,8 +60,38 @@ public class L60061 {
     }
 
 
+    private static boolean isAvailable(Set<Node> boSet, Set<Node> stickSet) {
+        // 시작점을 기준으로 bo, stick 검증
+        for (Node bo : boSet) {
+            // bo 는 양 옆 검증 필요
+            if (!stickSet.contains(new Node(bo.x, bo.y - 1))
+                    && !stickSet.contains(new Node(bo.x + 1, bo.y - 1))
+                    && !(boSet.contains(new Node(bo.x - 1, bo.y)) && boSet.contains(new Node(bo.x + 1, bo.y)))) {
+                return false;
+            }
+        }
+
+        for (Node stick : stickSet) {
+            // 기둥 검증
+            // 만일 기둥이 0이면 continue
+            if (stick.y == 0) {
+                continue;
+            }
+            // 그 외의 경우 검증 필요
+            // 보의 끝 위에 있어야 함
+            // 다른 기둥 위에 있어야 함
+            if (!boSet.contains(new Node(stick.x - 1, stick.y)) &&
+                    !boSet.contains(new Node(stick.x, stick.y)) &&
+                    !stickSet.contains(new Node(stick.x, stick.y - 1))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static class Node {
         int x;
+
         int y;
 
         public Node(int x, int y) {
@@ -117,6 +110,6 @@ public class L60061 {
         public int hashCode() {
             return Objects.hash(x, y);
         }
-    }
 
+    }
 }
