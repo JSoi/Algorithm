@@ -65,16 +65,4 @@ public class L150365 {
         int btwC = Math.abs(currentC - destC);
         return leftMovements >= btwC + btwR;
     }
-
-    static class Node {
-        int r;
-        int c;
-        String track;
-
-        public Node(int r, int c, String track) {
-            this.r = r;
-            this.c = c;
-            this.track = track;
-        }
-    }
 }
