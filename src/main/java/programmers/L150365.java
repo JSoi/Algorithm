@@ -1,7 +1,9 @@
 package programmers;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Queue;
 
 public class L150365 {
     static final String IMP = "impossible";
@@ -28,28 +30,41 @@ public class L150365 {
         }
         map[x - 1][y - 1] = 'S';
         map[r - 1][c - 1] = 'E';
-        travel(x - 1, y - 1, 0, "");
+        travel(x - 1, y - 1, k);
         return Optional.ofNullable(answerStr).orElse(IMP);
 
     }
 
-    static void travel(int currentR, int currentC, int travelCount, String track) {
-        if (answerStr != null) {
-            return;
-        }
-        if (travelCount == moveCount) {
-            if (map[currentR][currentC] == 'E') {
-                answerStr = track;
+    static void travel(int startR, int startC, int travelCount) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(new Node(startR, startC, ""));
+        while (!queue.isEmpty()) {
+            Node latest = queue.poll();
+            if (latest.track.length() == travelCount && map[latest.r][latest.c] == 'E') {
+                answerStr = latest.track;
+                return;
             }
-            return;
-        }
-        for (int i = 0; i < move.length; i++) {
-            int nextR = currentR + move[i][0];
-            int nextC = currentC + move[i][1];
-            if (nextR < 0 || nextR >= map.length || nextC < 0 || nextC >= map[0].length) {
-                continue;
+            for (int i = 0 ; i < move.length; i++) {
+                int[] m = move[i];
+                int nextR = latest.r + m[0];
+                int nextC = latest.c + m[1];
+                if (nextR < 0 || nextR >= map.length || nextC < 0 || nextC >= map[0].length || latest.track.length() >= travelCount) {
+                    continue;
+                }
+                queue.offer(new Node(nextR, nextC, latest.track + moveChar[i]));
             }
-            travel(nextR, nextC, travelCount + 1, track + moveChar[i]);
+        }
+    }
+
+    static class Node {
+        int r;
+        int c;
+        String track;
+
+        public Node(int r, int c, String track) {
+            this.r = r;
+            this.c = c;
+            this.track = track;
         }
     }
 }
