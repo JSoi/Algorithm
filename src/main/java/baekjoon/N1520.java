@@ -3,51 +3,52 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class N1520 {
-    static int row, col;
-    static int map[][];
-    static int answer;
-    static boolean[][] visit;
+    static int row;
+    static int col;
+    static int[][] map;
+    static int[][] dp;
     static final int[] dc = {0, 0, -1, 1};
     static final int[] dr = {1, -1, 0, 0};
-    static BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
 
-    static void input() throws IOException {
-        String fLine = buf.readLine();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String fLine = br.readLine();
         row = Integer.parseInt(fLine.split(" ")[0]);
         col = Integer.parseInt(fLine.split(" ")[1]);
         map = new int[row][col];
-        visit = new boolean[row][col];
+        dp = new int[row][col];
         for (int i = 0; i < row; i++) {
-            String thisLine = buf.readLine();
+            int[] input = Arrays.stream(br.readLine().split(" "))
+                    .mapToInt(Integer::parseInt).toArray();
             for (int j = 0; j < col; j++) {
-                map[i][j] = Integer.parseInt(thisLine.split(" ")[j]);
+                map[i][j] = input[j];
+                dp[i][j] = -1;
             }
         }
-
+        br.close();
+        System.out.println(travel(0, 0));
     }
 
-    static void travel(int targetR, int targetC) {
-        if (targetR == map.length - 1 || targetC == map[0].length - 1) {
-            answer++;
-            return;
+    static int travel(int r, int c) {
+        if (r == row - 1 && c == col - 1) {
+            return 1;
         }
-        visit[targetR][targetC] = true;
+        if (dp[r][c] != -1) {
+            return dp[r][c];
+        }
+        dp[r][c] = 0;
         for (int m = 0; m < 4; m++) {
-            int nextR = targetR + dr[m];
-            int nextC = targetC + dc[m];
-            if (nextC < 0 || nextC >= map[0].length || nextR < 0 || nextR >= map.length
-                    || map[nextR][nextC] >= map[targetR][targetC]) {
+            int nextR = r + dr[m];
+            int nextC = c + dc[m];
+            if (nextC < 0 || nextC >= col || nextR < 0 || nextR >= row
+                    || map[nextR][nextC] >= map[r][c]) {
                 continue;
             }
-            travel(nextR, nextC);
+            dp[r][c] += travel(nextR, nextC);
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        input();
-        travel(0, 0);
-        System.out.println(answer);
+        return dp[r][c];
     }
 }
