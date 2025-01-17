@@ -19,8 +19,8 @@ public class N1351 {
         System.out.println(answer);
     }
     public static long getValue(long n, int p, int q) {
-        if (n == 0) {
-            return 1;
+        if(map.containsKey(n)) {
+            return map.get(n);
         }
         long firstKey = n / p;
         long secondKey = n / q;
