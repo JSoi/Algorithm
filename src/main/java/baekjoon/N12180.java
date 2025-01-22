@@ -1,8 +1,6 @@
 package baekjoon;
 
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class N12180 {
     public static final String CASE_WRITER = "Case #%d: %d";
@@ -16,7 +14,8 @@ public class N12180 {
                 String[] input = br.readLine().split(" ");
                 int r = Integer.parseInt(input[0]);
                 int c = Integer.parseInt(input[1]);
-                bw.append(String.format(CASE_WRITER, i, solution(r, c))).append("\n");
+                bw.append(String.format(CASE_WRITER, i, backtracking(0, 0, r, c, 1, new boolean[r * c])))
+                        .append("\n");
             } catch (Exception e) {
                 break;
             }
@@ -29,42 +28,21 @@ public class N12180 {
     // 상, 우, 하, 좌
     static final int[][] DIR = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
-    static int solution(int r, int c) {
-        Queue<Node> queue = new LinkedList<>();
-        queue.offer(new Node(r - 1, 0, 0, 1L << ((r - 1) * c))); // 시작점
-        int answer = 0;
-        while (!queue.isEmpty()) {
-            Node current = queue.poll();
-            boolean isGraceful = false;
-            for (int m = 0; m <= 1; m++) {
-                int nd = (current.d + m) % 4;
-                int nr = current.r + DIR[nd][0];
-                int nc = current.c + DIR[nd][1];
-                int posMask = 1 << (c * nr + nc);
-                if (nr >= 0 && nr < r && nc >= 0 && nc < c && (current.mask & posMask) == 0) {
-                    isGraceful = true;
-                    queue.offer(new Node(nr, nc, nd, current.mask | posMask));
-                }
-            }
-            if (!isGraceful) {
-                answer++;
-            }
+    static int backtracking(int r, int c, int totalR, int totalC, int dir, boolean[] visit) {
+        if (r < 0 || r >= totalR || c < 0 || c >= totalC || visit[r * totalC + c]) {
+            return 0;
         }
-        return answer;
-    }
+        visit[r * totalC + c] = true;
+        int value = 0;
+        int nextR = r + DIR[dir][0];
+        int nextC = c + DIR[dir][1];
+        value += backtracking(nextR, nextC, totalR, totalC, dir, visit);
 
-
-    static class Node {
-        int r;
-        int c;
-        int d;
-        long mask;
-
-        Node(int r, int c, int d, long mask) {
-            this.r = r;
-            this.c = c;
-            this.d = d;
-            this.mask = mask;
-        }
+        int newDir = (dir + 1) % 4;
+        nextR = r + DIR[newDir][0];
+        nextC = c + DIR[newDir][1];
+        value += backtracking(nextR, nextC, totalR, totalC, newDir, visit);
+        visit[r * totalC + c] = false;
+        return Math.max(value, 1);
     }
 }
