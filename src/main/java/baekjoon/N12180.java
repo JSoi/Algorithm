@@ -1,6 +1,7 @@
 package baekjoon;
 
 import java.io.*;
+import java.util.Stack;
 
 public class N12180 {
     public static final String CASE_WRITER = "Case #%d: %d";
@@ -44,5 +45,56 @@ public class N12180 {
         value += backtracking(nextR, nextC, totalR, totalC, newDir, visit);
         visit[r * totalC + c] = false;
         return Math.max(value, 1);
+    }
+    // stack 사용 풀이 추가
+
+    static int solution(int r, int c) {
+        int answer = 0;
+        Stack<Node> stack = new Stack<>();
+        boolean[] v = new boolean[r * c];
+        stack.push(new Node(0, 0, 1, v));
+        while (!stack.isEmpty()) {
+            Node latest = stack.pop();
+            boolean[] visit = latest.visit;
+            visit[latest.r * c + latest.c] = true;
+            int sR = latest.r + DIR[latest.dir][0];
+            int sC = latest.c + DIR[latest.dir][1];
+
+            int rD = (latest.dir + 1) % 4;
+            int rR = latest.r + DIR[rD][0];
+            int rC = latest.c + DIR[rD][1];
+
+            if ((!isInRange(rR, rC, r, c)|| visit[rR * c + rC])
+                    && (!isInRange(sR, sC, r, c)|| visit[sR * c + sC]))  {
+                // 우아한 경로가 생성되지 않을 경우, 종료한다
+                answer++;
+                continue;
+            }
+            if (isInRange(sR, sC, r, c) && !visit[sR * c + sC]) {
+                stack.push(new Node(sR, sC, latest.dir, visit.clone()));
+            }
+            if (isInRange(rR, rC, r, c) && !visit[rR * c + rC]) {
+                stack.push(new Node(rR, rC, rD, visit.clone()));
+            }
+        }
+        return answer;
+    }
+
+    static boolean isInRange(int r, int c, int totalR, int totalC) {
+        return r >= 0 && r < totalR && c >= 0 && c < totalC;
+    }
+
+    static class Node {
+        int r;
+        int c;
+        int dir;
+        boolean[] visit;
+
+        public Node(int r, int c, int dir, boolean[] visit) {
+            this.r = r;
+            this.c = c;
+            this.dir = dir;
+            this.visit = visit;
+        }
     }
 }
