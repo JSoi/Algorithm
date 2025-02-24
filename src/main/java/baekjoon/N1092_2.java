@@ -5,43 +5,43 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+/**
+ * <a href = "">https://www.acmicpc.net/problem/1092</a>
+ */
 public class N1092_2 {
-    static int[] crain;
-    static int crainCount;
-    static Queue<Integer> boxs;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        crainCount = Integer.parseInt(br.readLine());
-        crain = new int[crainCount];
+        int crainCount = Integer.parseInt(br.readLine());
+        int[] crain = new int[crainCount];
         StringTokenizer tok = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < crainCount; i++) {
             crain[i] = Integer.parseInt(tok.nextToken());
         }
-        boxs = new PriorityQueue<>(Collections.reverseOrder());
         int boxCount = Integer.parseInt(br.readLine());
+        List<Integer> boxs = new LinkedList<>();
         tok = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < boxCount; i++) {
-            boxs.offer(Integer.parseInt(tok.nextToken()));
+            boxs.add(Integer.parseInt(tok.nextToken()));
         }
         int time = 0;
-        Arrays.sort(crain);
+        boxs.sort(Collections.reverseOrder());
+        crain = Arrays.stream(crain).boxed().sorted((a, b) -> b - a).mapToInt(Integer::valueOf).toArray();
         while (!boxs.isEmpty()) {
-            time++;
-            for (int c = crainCount - 1; c >= 0; c--) {
-                if (boxs.isEmpty()) {
-                    break;
-                }
-                int crainWeight = crain[c];
-                Iterator<Integer> boxIt = boxs.iterator();
-                while (boxIt.hasNext()) {
-                    int box = boxIt.next();
-                    if (crainWeight >= box) {
-                        boxIt.remove();
+            if (boxs.get(0) > crain[0]) {
+                System.out.println(-1);
+                return;
+            }
+            Iterator<Integer> boxIterator = boxs.iterator();
+            for (int crainIdx = 0; crainIdx < crainCount; crainIdx++) {
+                while (boxIterator.hasNext()) {
+                    int next = boxIterator.next();
+                    if (next <= crain[crainIdx]) {
+                        boxIterator.remove();
                         break;
                     }
                 }
             }
+            time++;
         }
         System.out.println(time);
     }
