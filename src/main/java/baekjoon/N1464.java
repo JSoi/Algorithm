@@ -1,39 +1,23 @@
 package baekjoon;
 
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class N1464 {
-    private static Set<String> strSet;
-    private static HashSet<String>[] visited;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        String input = scan.nextLine();
-        strSet = new HashSet<>();
-        visited = new HashSet[input.length() + 1];
-        for (int i = 0; i < visited.length; i++) {
-            visited[i] = new HashSet<>();
-        }
-        add(input, 0);
-        System.out.println(strSet.stream().sorted().findFirst().orElse(""));
-    }
+        String str = br.readLine();
+        StringBuilder ans = new StringBuilder(str.substring(0, 1));
 
-    private static void add(String str, int index) {
-        if (visited[index].contains(str)) {
-            return;
+        for (int i = 1; i < str.length(); i++) {
+            if (ans.charAt(0) >= str.charAt(i)) {
+                ans.insert(0, str.charAt(i));
+            } else {
+                ans.append(str.charAt(i));
+            }
         }
-        visited[index].add(str);
-        strSet.add(str);
-        for (int i = index; i < str.length(); i++) {
-            String reversed = reverseUntil(str, i + 1);
-            add(reversed, i + 1);
-        }
-    }
-
-    private static String reverseUntil(String str, int index) {
-        StringBuilder sb = new StringBuilder(str.substring(0, index)).reverse();
-        return sb.append(str.substring(index)).toString();
+        System.out.println(ans);
     }
 }
