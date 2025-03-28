@@ -1,6 +1,6 @@
 package programmers;
 
-import java.util.Stack;
+import java.util.Arrays;
 
 /**
  * <a href = "https://school.programmers.co.kr/learn/courses/30/lessons/389480">완전 범죄</a>
@@ -9,37 +9,40 @@ public class L389480 {
     public static void main(String[] args) {
         System.out.println(new L389480().solution(new int[][]{{1, 2}, {2, 3}, {2, 1}}, 4, 4));
     }
-
+    public static final int MAX = Integer.MAX_VALUE;
     public int solution(int[][] info, int n, int m) {
-        int answer = Integer.MAX_VALUE;
-        Stack<Status> stack = new Stack<>();
-        stack.push(new Status(-1, 0, 0));
-        while (!stack.isEmpty()) {
-            Status recent = stack.pop();
-            int recentIdx = recent.index;
-            if (recentIdx == info.length - 1) {
-                answer = Math.min(answer, recent.aSum);
-                continue;
-            }
-            if (recent.aSum + info[recentIdx + 1][0] < n) {
-                stack.push(new Status(recentIdx + 1, recent.aSum + info[recentIdx + 1][0], recent.bSum));
-            }
-            if (recent.bSum + info[recentIdx + 1][1] < m) {
-                stack.push(new Status(recentIdx + 1, recent.aSum, recent.bSum + info[recentIdx + 1][1]));
+        int len = info.length;
+        int[][][] dp = new int[len+1][n][m];
+        for (int[][] d : dp) {
+            for (int[] dd : d) {
+                Arrays.fill(dd, MAX);
             }
         }
-        return answer == Integer.MAX_VALUE ? -1 : answer;
-    }
 
-    private static class Status {
-        int index;
-        int aSum;
-        int bSum;
-
-        public Status(int index, int aSum, int bSum) {
-            this.index = index;
-            this.aSum = aSum;
-            this.bSum = bSum;
+        dp[0][0][0] = 0;
+        for (int i = 0; i < len ; i++) {
+            for (int a = 0; a < n; a++) {
+                for (int b = 0; b < m; b++) {
+                    if (dp[i][a][b] == MAX) continue;
+                    int newA = Math.min(n, a + info[i][0]);
+                    if (newA < n)
+                        dp[i + 1][newA][b] = Math.min(dp[i + 1][newA][b], dp[i][a][b] + info[i][0]);
+                    int newB = Math.min(m, b + info[i][1]);
+                    if (newB < m)
+                        dp[i + 1][a][newB] = Math.min(dp[i + 1][a][newB], dp[i][a][b] + info[i][1]);
+                }
+            }
         }
+
+        int answer = MAX;
+        for (int a = 0; a < n; a++) {
+            for (int b = 0; b < m; b++) {
+                if (dp[len][a][b] != MAX) {
+                    answer = Math.min(answer, a);
+                }
+            }
+        }
+        return answer == MAX ? -1 : answer;
     }
+
 }
