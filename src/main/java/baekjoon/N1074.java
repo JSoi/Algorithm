@@ -14,22 +14,10 @@ public class N1074 {
         int answer = 0;
         while (N > 1) {
             N /= 2;
-            int val = getCount(row / N, col / N) * N * N;
-            answer += val;
+            answer += ((row / N) * 2 + col / N) * N * N;
             row %= N;
             col %= N;
         }
         System.out.println(answer);
-    }
-
-    private static int getCount(int row, int col) {
-        if (row == 0 && col == 1) {
-            return 1;
-        } else if (row == 1 && col == 0) {
-            return 2;
-        } else if (row == 1 && col == 1) {
-            return 3;
-        }
-        return 0;
     }
 }
