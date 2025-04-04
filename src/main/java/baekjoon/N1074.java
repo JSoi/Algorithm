@@ -3,36 +3,37 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class N1074 {
-    static int answer;
-    static int[][] map;
-    static int r, c;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] line = br.readLine().split(" ");
         int N = (int) Math.pow(2, Integer.parseInt(line[0]));
-        r = Integer.parseInt(line[1]);
-        c = Integer.parseInt(line[2]);
-        map = new int[N][N];
-        travel(N, 0, 0);
-        System.out.println(map[r][c]);
-    }
-
-    private static void travel(int n, int startR, int startC) {
-        if (n == 2) {
-            map[startR][startC] = answer;
-            map[startR][startC + 1] = answer + 1;
-            map[startR + 1][startC] = answer + 2;
-            map[startR + 1][startC + 1] = answer + 3;
-            answer += 4;
-            return;
+        int row = Integer.parseInt(line[1]);
+        int col = Integer.parseInt(line[2]);
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{0, 0, N});
+        int temp = 0;
+        while (!queue.isEmpty()) {
+            int[] latest = queue.poll();
+            int offset = latest[2] / 2;
+            int r = latest[0];
+            int c = latest[1];
+            if (latest[2] == 1) {
+                if (r == row && c == col) {
+                    System.out.println(temp);
+                    return;
+                }
+                temp++;
+                continue;
+            }
+            queue.offer(new int[]{r, c, offset});
+            queue.offer(new int[]{r, c + offset, offset});
+            queue.offer(new int[]{r + offset, c, offset});
+            queue.offer(new int[]{r + offset, c + offset, offset});
         }
-        int offset = n / 2;
-        travel(offset, startR, startC);
-        travel(offset, startR, startC + offset);
-        travel(offset, startR + offset, startC);
-        travel(offset, startR + offset, startC + offset);
+        System.out.println(-1);
     }
 }
