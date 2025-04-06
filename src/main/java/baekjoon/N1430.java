@@ -41,8 +41,22 @@ public class N1430 {
         dist = new int[castleCount + 1];
         Arrays.fill(dist, MAX);
         dist[castleCount] = 0;
-        for (int i = 0; i < castleCount; i++) {
-            dist[i] = minDist(i);
+
+        boolean[] visited = new boolean[castleCount + 1];
+        visited[castleCount] = true;
+
+        LinkedList<Integer> queue = new LinkedList<>();
+        queue.offer(castleCount);
+
+        while (!queue.isEmpty()) {
+            int curr = queue.poll();
+            for (int next : connMap.get(curr)) {
+                if (!visited[next]) {
+                    visited[next] = true;
+                    dist[next] = dist[curr] + 1;
+                    queue.offer(next);
+                }
+            }
         }
         double answer = 0;
         for (int i = 0; i < castleCount; i++) {
@@ -52,31 +66,5 @@ public class N1430 {
             answer += initialEnergy / Math.pow(2, dist[i] - 1.0);
         }
         System.out.println(answer);
-    }
-
-    private static int minDist(int start) {
-        LinkedList<Integer> queue = new LinkedList<>();
-        boolean[] visit = new boolean[castleCount + 1];
-        queue.offer(start);
-        visit[start] = true;
-        int d = 0;
-        while (!queue.isEmpty()) {
-            int count = queue.size();
-            while (count-- > 0) {
-                int current = queue.poll();
-                if (current == castleCount) {
-                    return d;
-                }
-                for (int neighbor : connMap.get(current)) {
-                    if (visit[neighbor]) {
-                        continue;
-                    }
-                    visit[neighbor] = true;
-                    queue.offer(neighbor);
-                }
-            }
-            d++;
-        }
-        return MAX;
     }
 }
