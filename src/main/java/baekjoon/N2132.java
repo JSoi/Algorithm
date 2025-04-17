@@ -10,7 +10,6 @@ import java.util.*;
  */
 public class N2132 {
     static int[] fruitStatus;
-    static int maxFruitCount;
     static int vertex;
     static List<Integer>[] conn;
     static int maxFruit;
@@ -18,9 +17,8 @@ public class N2132 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        maxFruitCount = Integer.parseInt(br.readLine());
+        vertex = Integer.parseInt(br.readLine());
         fruitStatus = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        vertex = fruitStatus.length;
         conn = new List[vertex];
         for (int i = 0; i < conn.length; i++) {
             conn[i] = new ArrayList<>();
@@ -40,14 +38,16 @@ public class N2132 {
         int bestStart = farthestNode;
         dfs(farthestNode, -1, fruitStatus[farthestNode]);
 
-        System.out.println(String.format("%d %d", maxFruit,  Math.min(bestStart,farthestNode)+ 1));
+        System.out.println(String.format("%d %d", maxFruit, Math.min(farthestNode, bestStart) + 1));
 
     }
 
     static void dfs(int node, int parent, int acc) {
-        if (acc >= maxFruit) {
+        if (acc > maxFruit) {
             maxFruit = acc;
             farthestNode = node;
+        } else if (acc == maxFruit) {
+            farthestNode = Math.min(farthestNode, node);
         }
 
         for (int next : conn[node]) {
