@@ -3,49 +3,50 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 /**
  * <a href = "https://www.acmicpc.net/problem/1301">비즈 공예</a>
  */
 public class N1301 {
-    static int totalBeadCount;
+    static int beadColorCount;
     static int[] beadArr;
-    static int[] used;
-    static Map<String, Integer> beadMap = new HashMap<>();
+    static long[][][][][][][] dp;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int beadColorCount = Integer.parseInt(br.readLine()); // [3,5]
-        totalBeadCount = 0;
-        beadArr = new int[beadColorCount];
-        used = new int[beadColorCount];
+        beadColorCount = Integer.parseInt(br.readLine()); // [3,5]
+        beadArr = new int[5];
         for (int b = 0; b < beadColorCount; b++) {
             int count = Integer.parseInt(br.readLine());
             beadArr[b] = count;
-            totalBeadCount += count;
         }
-        int answer = 0;
-        for (int i = 0; i < beadColorCount; i++) {
-            used[i]++;
-            answer += fillBeads(1, "", -1, i);
-            used[i]--;
-        }
-        System.out.println(answer);
+        int MAX = 12; // 각 구슬 수가 최대 12
+        dp = new long[MAX][MAX][MAX][MAX][MAX][6][6];
+        for (int a = 0; a < MAX; a++)
+            for (int b = 0; b < MAX; b++)
+                for (int c = 0; c < MAX; c++)
+                    for (int d = 0; d < MAX; d++)
+                        for (int e = 0; e < MAX; e++)
+                            for (int l = 0; l < 6; l++)
+                                for (int cnt = 0; cnt < 6; cnt++)
+                                    dp[a][b][c][d][e][l][cnt] = -1;
+        System.out.println(dfs(5, 5));
     }
 
-    static int fillBeads(int usedBeads, String status, int last1, int last2) {
-        if (usedBeads == totalBeadCount) return 1;
-        String key = status + (last1 == -1 ? "" : String.valueOf(last1)) + last2;
-        if (beadMap.containsKey(key)) return beadMap.get(key);
-        int total = 0;
-        for (int i = 0; i < beadArr.length; i++) {
-            if (used[i] >= beadArr[i] || i == last1 || i == last2) continue;
-            used[i]++;
-            total += fillBeads(usedBeads + 1, status + "" + i, last2, i);
-            used[i]--;
+    static long dfs(int last1, int last2) {
+        if (Arrays.stream(beadArr).sum() == 0L) return 1;
+        long status = dp[beadArr[0]][beadArr[1]][beadArr[2]][beadArr[3]][beadArr[4]][last1][last2];
+        if (status != -1)
+            return status;
+        long res = 0;
+        for (int i = 0; i < beadColorCount; i++) {
+            if (beadArr[i] == 0 || i == last1 || i == last2) continue;
+            beadArr[i]--;
+            res += dfs(i, last1);
+            beadArr[i]++;
         }
-        beadMap.put(key, total);
-        return total;
+        dp[beadArr[0]][beadArr[1]][beadArr[2]][beadArr[3]][beadArr[4]][last1][last2] = res;
+        return res;
     }
 }
