@@ -1,48 +1,51 @@
 package baekjoon;
 
-import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class N1334 {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         String target = scan.nextLine();
-        BigInteger original;
-        if (isAllNine(target)) {
-            original = new BigInteger(target).add(BigInteger.ONE);
-            target = original.toString();
-        } else {
-            original = new BigInteger(target);
-        }
-        int len = target.length();
-        if (len == 1) {
-            System.out.println(original.add(BigInteger.ONE));
-            return;
-        }
-        BigInteger left = new BigInteger(target.substring(0, len / 2));
-        BigInteger palindrome;
-        if (len % 2 == 0) { // 짝수
-            palindrome = new BigInteger(left.toString() + new StringBuffer(left.toString()).reverse());
-            while (original.compareTo(palindrome) >= 0) {
-                left = left.add(BigInteger.ONE);
-                palindrome = new BigInteger(left.toString() + new StringBuffer(left.toString()).reverse());
-            }
-        } else {
-            palindrome = new BigInteger(left.toString() + new StringBuffer(left.divide(BigInteger.TEN).toString()).reverse());
-            while (original.compareTo(palindrome) >= 0) {
-                left = left.add(BigInteger.ONE);
-                palindrome = new BigInteger(left.toString() + new StringBuffer(left.divide(BigInteger.TEN).toString()).reverse());
-            }
-        }
-        System.out.println(palindrome);
+        System.out.println(nextPalindrome(target));
     }
+    public static String nextPalindrome(String num) {
+        int len = num.length();
+        char[] arr = num.toCharArray();
 
-    static boolean isAllNine(String target) {
-        for (char c : target.toCharArray()) {
-            if (c != '9') {
-                return false;
+        for (int i = 0; i < len / 2; i++) {
+            arr[len - 1 - i] = arr[i];
+        }
+
+        String candidate = new String(arr);
+        if (candidate.compareTo(num) > 0) {
+            return candidate;
+        }
+
+        int mid = (len - 1) / 2;
+        while (mid >= 0) {
+            if (arr[mid] != '9') {
+                arr[mid]++;
+                arr[len - 1 - mid] = arr[mid];
+                break;
+            } else {
+                arr[mid] = '0';
+                arr[len - 1 - mid] = '0';
+                mid--;
             }
         }
-        return true;
+
+        if (mid < 0) {
+            char[] res = new char[len + 1];
+            res[0] = '1';
+            res[len] = '1';
+            Arrays.fill(res, 1, len, '0');
+            return new String(res);
+        }
+
+        for (int i = 0; i < len / 2; i++) {
+            arr[len - 1 - i] = arr[i];
+        }
+        return new String(arr);
     }
 }
