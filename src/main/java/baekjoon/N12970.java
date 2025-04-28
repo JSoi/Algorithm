@@ -13,19 +13,19 @@ public class N12970 {
         Arrays.fill(s, 'B');
 
         int aCount = 0;
-        for (int i = 0; i < n; i++) {
-            int cCount = n - i - 1;
-            if (k >= cCount) {
-                s[i] = 'A';
-                k -= (cCount - aCount);
+        for (int i = 0; i < n && k > 0; i++) {
+            k += aCount;
+            int pairCount = n - i - 1;
+            if (pairCount <= k) {
+                k -= pairCount;
                 aCount++;
+                s[i] = 'A';
             } else {
-                int targetIdx = n - k + aCount - 1;
-                if (targetIdx >= i && targetIdx < n) {
-                    s[targetIdx] = 'A';
+                int idx = n - k - 1;
+                if (idx >= i && idx < n) {
+                    s[idx] = 'A';
                     k = 0;
                 }
-                break;
             }
         }
         if (k != 0) {
