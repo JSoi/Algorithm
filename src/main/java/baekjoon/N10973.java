@@ -1,56 +1,80 @@
 package baekjoon;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class N10973 {
-	static String target;
-	static int count = 0;
-	static String answer = "";
-	static ArrayList<String> arr = new ArrayList<String>();
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int c = scan.nextInt();
+        int[] arr = new int[c];
+        for (int i = 0; i < c; i++) {
+            arr[i] = scan.nextInt();
+        }
+        scan.close();
+        int i = c - 1;
+        boolean hasDecreased = false;
+        while (i >= 1) {
+            if (arr[i - 1] > arr[i]) {
+                hasDecreased = true;
+            }
+            i--;
+        }
+        if (!hasDecreased) {
+            System.out.println(-1);
+            return;
+        }
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Scanner scan = new Scanner(System.in);
-		int c = scan.nextInt();
+        int inc = c - 1;
+        while (inc >= 1 && arr[inc - 1] < arr[inc]) {
+            inc--;
+        }
 
-		scan.nextLine();
+        if (inc == c - 1) { // 끝에서 시작해서 증가하는 부분이 없음
+            loop:
+            for (int j = c - 1; j >= i; j--) {
+                for (int k = j - 1; k >= i; k--) {
+                    if (arr[j] < arr[k]) {
+                        int temp = arr[j];
+                        arr[j] = arr[k];
+                        arr[k] = temp;
+                        break loop;
+                    }
+                }
+            }
+            printAnswer(arr);
+        } else {
+            int targetI = 0;
+            int max = 0;
+            for (int j = inc; j < c; j++) {
+                if (arr[inc - 1] > arr[j] && arr[j] > max) {
+                    max = arr[j];
+                    targetI = j;
+                }
+            }
+            swap(arr, targetI, inc - 1);
+            sortDesc(arr, inc, c - 1);
+            printAnswer(arr);
+        }
+    }
 
-		target = scan.nextLine();
-		target = target.trim();
-		scan.close();
+    private static void sortDesc(int[] arr, int start, int end) {
+        int[] target = new int[end - start + 2];
+        System.arraycopy(arr, start, target, 0, end - start + 1);
+        Arrays.sort(target);
+        for (int i = start; i <= end; i++) {
+            arr[i] = target[end - start - (i - start) + 1];
+        }
+    }
 
-		boolean visit[] = new boolean[c + 1];
-		visit[0] = true;
+    static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
 
-		per("", visit);
-//		for(String s : arr) {
-//			System.out.println(s);
-//		}
-		System.out.println(arr.indexOf(target) == 0 ? -1 : arr.get(arr.indexOf(target) - 1));
-
-	}
-
-	public static void per(String input, boolean[] v) {
-		if (allV(v)) {
-			input = input.trim();
-			arr.add(input);
-			return;
-		}
-		for (int i = 1; i <= v.length - 1; i++) {
-			if (!v[i]) {
-				v[i] = true;
-				per(input + " " + i, v);
-				v[i] = false;
-			}
-		}
-	}
-
-	public static boolean allV(boolean[] v) {
-		for (boolean b : v) {
-			if (!b)
-				return false;
-		}
-		return true;
-	}
+    static void printAnswer(int[] arr) {
+        System.out.println(Arrays.stream(arr).mapToObj(String::valueOf).collect(Collectors.joining(" ")));
+    }
 }
