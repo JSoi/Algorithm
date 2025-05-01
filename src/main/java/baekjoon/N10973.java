@@ -2,7 +2,6 @@ package baekjoon;
 
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class N10973 {
     public static void main(String[] args) {
@@ -13,58 +12,38 @@ public class N10973 {
             arr[i] = scan.nextInt();
         }
         scan.close();
-        int i = c - 1;
-        boolean hasDecreased = false;
-        while (i >= 1) {
-            if (arr[i - 1] > arr[i]) {
-                hasDecreased = true;
-            }
-            i--;
-        }
-        if (!hasDecreased) {
+        if (!prevPermutation(arr)) {
             System.out.println(-1);
-            return;
-        }
-
-        int inc = c - 1;
-        while (inc >= 1 && arr[inc - 1] < arr[inc]) {
-            inc--;
-        }
-
-        if (inc == c - 1) { // 끝에서 시작해서 증가하는 부분이 없음
-            loop:
-            for (int j = c - 1; j >= i; j--) {
-                for (int k = j - 1; k >= i; k--) {
-                    if (arr[j] < arr[k]) {
-                        int temp = arr[j];
-                        arr[j] = arr[k];
-                        arr[k] = temp;
-                        break loop;
-                    }
-                }
-            }
-            printAnswer(arr);
         } else {
-            int targetI = 0;
-            int max = 0;
-            for (int j = inc; j < c; j++) {
-                if (arr[inc - 1] > arr[j] && arr[j] > max) {
-                    max = arr[j];
-                    targetI = j;
-                }
+            for (int e : arr) {
+                System.out.print(e + " ");
             }
-            swap(arr, targetI, inc - 1);
-            sortDesc(arr, inc, c - 1);
-            printAnswer(arr);
         }
     }
 
+    private static boolean prevPermutation(int[] arr) {
+        int n = arr.length;
+        int i = n - 1;
+        while (i > 0 && arr[i - 1] <= arr[i]) {
+            i--;
+        }
+        if (i == 0) return false;
+        int j = n - 1;
+        while (arr[j] >= arr[i - 1]) {
+            j--;
+        }
+        swap(arr, i - 1, j);
+        sortDesc(arr, i, n - 1);
+        return true;
+    }
+
+
     private static void sortDesc(int[] arr, int start, int end) {
-        int[] target = new int[end - start + 2];
-        System.arraycopy(arr, start, target, 0, end - start + 1);
-        Arrays.sort(target);
-        for (int i = start; i <= end; i++) {
-            arr[i] = target[end - start - (i - start) + 1];
+        Arrays.sort(arr, start, end + 1);
+        while (start < end) {
+            int temp = arr[start];
+            arr[start++] = arr[end];
+            arr[end--] = temp;
         }
     }
 
@@ -72,9 +51,5 @@ public class N10973 {
         int temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
-    }
-
-    static void printAnswer(int[] arr) {
-        System.out.println(Arrays.stream(arr).mapToObj(String::valueOf).collect(Collectors.joining(" ")));
     }
 }
