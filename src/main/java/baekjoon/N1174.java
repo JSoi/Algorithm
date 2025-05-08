@@ -9,13 +9,9 @@ public class N1174 {
         for (long i = 0; i <= 9; i++) {
             queue.offer(i);
         }
-        int localN = 1;
+        long localN = 1;
         while (!queue.isEmpty()) {
-            Long poll = queue.poll();
-            if (poll > 1_000_000) {
-                System.out.println(-1);
-                return;
-            }
+            long poll = queue.poll();
             if (localN == n) {
                 System.out.println(poll);
                 return;
