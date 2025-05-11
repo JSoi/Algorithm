@@ -3,17 +3,20 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 
 public class N1206 {
-    static double[] averageArr;
+    static int[] averageArr; // 1000배한 평균값 저장
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
-        averageArr = new double[n];
+        averageArr = new int[n]; // 정수 배열로 선언
+
         for (int i = 0; i < n; i++) {
-            averageArr[i] = Double.parseDouble(br.readLine());
+            averageArr[i] = new BigDecimal(br.readLine()).movePointRight(3).intValue();
         }
+
         int answer = 1;
         while (true) {
             if (isParticipantCount(answer)) {
@@ -25,29 +28,20 @@ public class N1206 {
     }
 
     private static boolean isParticipantCount(int ppl) {
-        for (double a : averageArr) {
-            if (!isBetween(a, ppl)) {
+        for (int avg : averageArr) {
+            if (!isBetween(avg, ppl)) {
                 return false;
             }
         }
         return true;
     }
 
-    private static boolean isBetween(double avg, int ppl) {
-        // sum
-        double totalSum = avg * ppl;
-        if (totalSum > ppl * 10) {
-            return false;
-        }
-        for (int i = (int) totalSum; i <= (int) Math.ceil(avg) * ppl; i++) {
-            if (Double.compare(getAverageWithThreeDigits(i, ppl), avg) == 0) {
+    private static boolean isBetween(int scaledAvg, int ppl) {
+        for (int sum = ((scaledAvg * ppl + 999) / 1000) * 1000; sum <= ppl * 10000L; sum += 1000) {
+            if (sum / ppl == scaledAvg) {
                 return true;
             }
         }
         return false;
-    }
-
-    private static double getAverageWithThreeDigits(int sum, int n) {
-        return Math.floor((double) sum / n * 1000) / 1000;
     }
 }
