@@ -1,51 +1,65 @@
 package baekjoon;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class N2084 {
     static int n;
-    static int[] arr;
-    static boolean[][] answer;
+    static int[] degree;
+    static boolean[][] adj;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        n = Integer.parseInt(sc.nextLine());
-        arr = Arrays.stream(sc.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        boolean[][] conn = new boolean[n][n];
-        backTracking(0, conn);
-        if (answer == null) {
+        n = sc.nextInt();
+        degree = new int[n];
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            degree[i] = sc.nextInt();
+            total += degree[i];
+            if (degree[i] >= n) {
+                System.out.println(-1);
+                return;
+            }
+        }
+        if (total % 2 != 0) { // 검사 확인
             System.out.println(-1);
-        } else {
+            return;
+        }
+
+        if (isValidGraph()) {
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    System.out.print((answer[i][j] ? "1" : "0") + " ");
+                    sb.append(adj[i][j] ? "1 " : "0 ");
                 }
-                System.out.println();
+                sb.append("\n");
             }
+            System.out.print(sb);
+        } else {
+            System.out.println(-1);
         }
     }
 
-    private static void backTracking(int i, boolean[][] conn) {
-        if (answer != null) return;
-        if (Arrays.stream(arr).sum() == 0) {
-            answer = new boolean[n][n];
-            for (int j = 0; j < n; j++) {
-                answer[j] = Arrays.copyOf(conn[j], n);
-            }
-            return;
+    static boolean isValidGraph() {
+        adj = new boolean[n][n];
+        int[][] nodes = new int[n][2]; // [degree, index]
+        for (int i = 0; i < n; i++) {
+            nodes[i][0] = degree[i];
+            nodes[i][1] = i;
         }
-        for (int j = 0; j < n; j++) {
-            if (i == j || arr[i] == 0 || arr[j] == 0 || conn[i][j] || conn[j][i]) {
-                continue;
+
+        while (true) {
+            Arrays.sort(nodes, (a, b) -> b[0] - a[0]); // degree 내림차순
+            if (nodes[0][0] == 0) break;
+            int d = nodes[0][0];
+            for (int i = 1; i <= d; i++) {
+                if (nodes[i][0] == 0) return false;
+                int u = nodes[0][1];
+                int v = nodes[i][1];
+                adj[u][v] = adj[v][u] = true;
+                nodes[i][0]--;
             }
-            conn[i][j] = conn[j][i] = true;
-            arr[i] -= 1;
-            arr[j] -= 1;
-            backTracking(j, conn);
-            arr[i] += 1;
-            arr[j] += 1;
-            conn[i][j] = conn[j][i] = false;
+            nodes[0][0] = 0;
         }
+        return true;
     }
 }
