@@ -3,6 +3,8 @@ package com.soi.baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class N1014 {
     public static void main(String[] args) throws IOException {
@@ -23,41 +25,66 @@ public class N1014 {
             ClassRoom classRoom = new ClassRoom(r, c, map);
             sb.append(classRoom.dp()).append('\n');
         }
-        System.out.println(sb);
+        System.out.print(sb);
 
     }
 
     static class ClassRoom {
         int r;
         int c;
-        int[] sum;
         int[][] dp;
+        List<Integer>[] validMasks;
+        boolean[][] map;
 
         public ClassRoom(int r, int c, boolean[][] map) {
             this.r = r;
             this.c = c;
-            sum = new int[c];
-            dp = new int[c][2];
-            count(map);
-
+            this.map = map;
+            dp = new int[r][1 << c];
+            validMasks = new List[r];
+            buildValidMasks();
         }
 
         public int dp() {
-            dp[0][1] = sum[0];
-            int answer = dp[0][1];
-            for (int i = 1; i < c; i++) {
-                dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);
-                dp[i][1] = Math.max(dp[i - 1][0] + sum[i], dp[i - 1][1]);
-                answer = Math.max(answer, Math.max(dp[i][0], dp[i][1]));
+            int answer = 0;
+            for (int mask : validMasks[0]) {
+                dp[0][mask] = Integer.bitCount(mask);
+                answer = Math.max(answer, dp[0][mask]);
+            }
+            // DP 수행
+            for (int row = 1; row < r; row++) {
+                for (int currMask : validMasks[row]) {
+                    for (int prevMask : validMasks[row - 1]) {
+                        if ((currMask & (prevMask << 1)) == 0 && (currMask & (prevMask >> 1)) == 0) {
+                            dp[row][currMask] = Math.max(dp[row][currMask], dp[row - 1][prevMask] + Integer.bitCount(currMask));
+                            answer = Math.max(answer, dp[row][currMask]);
+                        }
+                    }
+                }
             }
             return answer;
         }
 
-        public void count(boolean[][] map) {
-            for (int i = 0; i < r; i++) {
-                for (int j = 0; j < c; j++) {
-                    if (map[i][j]) {
-                        sum[j]++;
+        public void buildValidMasks() {
+            for (int row = 0; row < r; row++) {
+                validMasks[row] = new ArrayList<>();
+                for (int mask = 0; mask < (1 << c); mask++) {
+                    boolean isValid = true;
+
+                    for (int col = 0; col < c; col++) {
+                        if (((mask >> col) & 1) == 1) {
+                            if (!map[row][col]) {
+                                isValid = false;
+                                break;
+                            }
+                            if (col > 0 && ((mask >> (col - 1)) & 1) == 1) {
+                                isValid = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (isValid) {
+                        validMasks[row].add(mask);
                     }
                 }
             }
