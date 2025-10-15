@@ -9,42 +9,57 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class N11657 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] NM = br.readLine().split(" ");
-        int N = Integer.parseInt(NM[0]);
-        int M = Integer.parseInt(NM[1]);
+    private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static final long INF = Long.MAX_VALUE;
+    private static int N, M;
+    private static long[] dist;
+    private static List<long[]> edges;
 
-        int[] dist = new int[N];
-        Arrays.fill(dist, Integer.MAX_VALUE);
+    public static void main(String[] args) throws IOException {
+        init();
+        // N-1개의 간선을 거치는 모든 최단 경로
+        for (int i = 0; i < N; i++) {
+            for (long[] e : edges) {
+                int from = (int) e[0], to = (int) e[1];
+                long cost = e[2];
+                if (dist[from] != INF && dist[to] > dist[from] + cost) {
+                    dist[to] = dist[from] + cost;
+                }
+            }
+        }
+        // 음수 사이클 확인
+        for (long[] e : edges) {
+            int from = (int) e[0], to = (int) e[1];
+            long cost = e[2];
+            if (dist[from] != INF && dist[to] > dist[from] + cost) {
+                System.out.println(-1);
+                return;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < N; i++) {
+            sb.append(dist[i] == INF ? -1 : dist[i]).append("\n");
+        }
+        System.out.print(sb);
+    }
+
+    private static void init() throws IOException {
+        String[] NM = br.readLine().split(" ");
+        N = Integer.parseInt(NM[0]);
+        M = Integer.parseInt(NM[1]);
+        edges = new ArrayList<>();
+
+        dist = new long[N];
+        Arrays.fill(dist, INF);
         dist[0] = 0;
-        List<int[]> lists = new ArrayList<>();
 
         for (int i = 0; i < M; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int A = Integer.parseInt(st.nextToken()) - 1;
             int B = Integer.parseInt(st.nextToken()) - 1;
             int C = Integer.parseInt(st.nextToken());
-            lists.add(new int[]{A, B, C});
+            edges.add(new long[]{A, B, C});
         }
-        for (int i = 0; i < N; i++) {
-            for (int[] conn : lists) {
-                int from = conn[0];
-                int to = conn[1];
-                int cost = conn[2];
-                if (dist[from] != Integer.MAX_VALUE && dist[to] > dist[from] + cost) {
-                    dist[to] = dist[from] + cost;
-                }
-                if (dist[to] < 0) {
-                    System.out.println(-1);
-                    return;
-                }
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < N; i++) {
-            sb.append(dist[i] == Integer.MAX_VALUE ? -1 : dist[i]).append("\n");
-        }
-        System.out.print(sb);
     }
 }
