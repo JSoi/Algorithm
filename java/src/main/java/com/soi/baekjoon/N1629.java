@@ -1,11 +1,9 @@
 package com.soi.baekjoon;
 
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class N1629 {
-
     public static void main(String[] args) {
         String input = new Scanner(System.in).nextLine();
         StringTokenizer tok = new StringTokenizer(input, " ");
@@ -15,19 +13,18 @@ public class N1629 {
 //        long a = 2_147_483_647L;
 //        long b = 2_147_483_647L;
 //        long c = 2_147_483_647L;
-        // (a * a) % c = (a%c * a%c) %c
-        //
-        long current = a;
-        for (int i = 0; i < b; i++) {
-            current *= a;
-            System.out.println(current%c);
-
-//        System.out.println(current);
-        }
-        System.out.println(current % c);
+        System.out.println(mod(a, b, c));
     }
 
-    private static long val(long current, long mulVal, long div) {
-        return (current % div * mulVal % div) % div;
+    private static long mod(long val, long exp, long mod) {
+        if (exp == 1) {
+            return val % mod;
+        }
+        long ret = mod(val, exp / 2, mod);
+        ret = (ret * ret) % mod;
+        if ((exp % 2) == 1) {
+            ret = (ret * val) % mod;
+        }
+        return ret % mod;
     }
 }
