@@ -59,22 +59,18 @@ public class N1865 {
 
         boolean doesDiminish() {
             int[] dist = new int[n];
-            for (int start = 0; start < n; start++) {
-                Arrays.fill(dist, INF);
-                dist[start] = 0;
-                for (int i = 0; i < n - 1; i++) {
-                    for (int[] e : edges) {
-                        int from = e[0], to = e[1], cost = e[2];
-                        if (dist[from] != INF && dist[to] > dist[from] + cost) {
-                            dist[to] = dist[from] + cost;
-                        }
-                    }
-                }
+            for (int i = 0; i < n - 1; i++) { // 간선 길이만큼 순회
                 for (int[] e : edges) {
                     int from = e[0], to = e[1], cost = e[2];
-                    if (dist[from] != INF && dist[to] > dist[from] + cost) {
-                        return true;
+                    if (dist[to] > dist[from] + cost) {
+                        dist[to] = dist[from] + cost;
                     }
+                }
+            }
+            for (int[] e : edges) {
+                int from = e[0], to = e[1], cost = e[2];
+                if (dist[to] > dist[from] + cost) {
+                    return true;
                 }
             }
             return false;
