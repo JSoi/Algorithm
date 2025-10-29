@@ -1,50 +1,43 @@
 package com.soi.baekjoon;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class N14003 {
     public static void main(String[] args) throws IOException {
         BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
-        int cnt = Integer.parseInt(buf.readLine());
+        int n = Integer.parseInt(buf.readLine());
+        int[] arr = new int[n];
+        int[] lis = new int[n];
+        int[] prev = new int[n];
+        int[] lisIndex = new int[n];
+
         StringTokenizer tok = new StringTokenizer(buf.readLine());
-        long[] arr = new long[cnt];
-        int[] before = new int[cnt];
-        int[] dp = new int[cnt];
-        for (int i = 0; i < cnt; i++) {
-            arr[i] = Long.parseLong(tok.nextToken());
-            before[i] = i;
-            dp[i] = 1;
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(tok.nextToken());
         }
-        long max = 0;
-        int maxIdx = 0;
-        for (int i = 1; i < cnt; i++) {
-            for (int j = 0; j < i; j++) {
-                if (arr[j] < arr[i] && dp[j] + 1 > dp[i]) {
-                    dp[i] = dp[j] + 1;
-                    before[i] = j;
-                }
-            }
-            if (dp[i] > max) {
-                max = dp[i];
-                maxIdx = i;
-            }
+
+        int length = 0;
+        for (int i = 0; i < n; i++) {
+            int idx = Arrays.binarySearch(lis, 0, length, arr[i]);
+            if (idx < 0) idx = -(idx + 1); // 삽입 위치 결정
+            lis[idx] = arr[i]; // 값 저장
+            lisIndex[idx] = i; // index 저장
+            prev[i] = idx > 0 ? lisIndex[idx - 1] : -1;
+            if (idx == length) length++;
         }
-        System.out.println(max);
-        List<Long> result = new ArrayList<>();
-        while (true) {
-            result.add(arr[maxIdx]);
-            if (before[maxIdx] == maxIdx) break;
-            maxIdx = before[maxIdx];
+
+        System.out.println(length);
+        Stack<Integer> stack = new Stack<>();
+        int k = lisIndex[length - 1];
+        while (k != -1) {
+            stack.push(arr[k]);
+            k = prev[k];
         }
-        Collections.reverse(result);
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        for (long num : result) {
-            bw.append(String.valueOf(num)).append(" ");
-        }
-        bw.flush();
+        while (!stack.isEmpty()) System.out.print(stack.pop() + " ");
     }
 }
