@@ -46,7 +46,7 @@ public class N13460 {
         while (!queue.isEmpty()) {
             int[] curr = queue.poll();
 //            System.out.println(Arrays.toString(curr));
-            if (curr[4] >= 10) continue;
+            if (curr[4] > 10) continue;
             if (curr[0] == oR && curr[1] == oC) {
                 answer = Math.min(answer, curr[4]);
                 return;
