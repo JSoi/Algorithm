@@ -20,7 +20,7 @@ public class N2493 {
             while (!stack.isEmpty() && stack.peek().height < input) {
                 stack.pop();
             }
-            if (!stack.isEmpty() && stack.peek().height >= input) {
+            if (!stack.isEmpty()) {
                 answer[i] = stack.peek().idx;
             }
             stack.push(new Tower(i + 1, input));
