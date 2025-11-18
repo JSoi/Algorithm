@@ -1,18 +1,18 @@
 package com.soi.baekjoon;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.StringTokenizer;
 
 public class N6549 {
     static int[] height, tree;
+    static int n;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         while (true) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int n = Integer.parseInt(st.nextToken());
+            n = Integer.parseInt(st.nextToken());
             if (n == 0) break;
 
             height = new int[n];
@@ -21,16 +21,20 @@ public class N6549 {
             }
             tree = new int[n * 4];
             init(1, 0, n - 1);
-            System.out.println(getMaxArea(0, n - 1));
+            bw.append(String.valueOf(getMaxArea(0, n - 1))).append("\n");
         }
+        bw.flush();
     }
 
     static int init(int node, int start, int end) {
         if (start == end) return tree[node] = start;
         int mid = (start + end) / 2;
-        return tree[node] = Math.min(init(node * 2, start, mid), init(node * 2 + 1, mid + 1, end));
+        int left = init(node * 2, start, mid);
+        int right = init(node * 2 + 1, mid + 1, end);
+        return tree[node] = height[left] <= height[right] ? left : right;
     }
 
+    // 최소 높이를 가지는 인덱스 반환
     static int query(int node, int start, int end, int l, int r) {
         if (r < start || end < l) return -1;
         if (l <= start && end <= r) return tree[node];
@@ -46,7 +50,7 @@ public class N6549 {
 
     static long getMaxArea(int left, int right) {
         if (left > right) return 0;
-        int minIdx = query(1, 0, height.length - 1, left, right);
+        int minIdx = query(1, 0, n - 1, left, right);
         long area = (long) height[minIdx] * (right - left + 1);
 
         long leftArea = getMaxArea(left, minIdx - 1);
