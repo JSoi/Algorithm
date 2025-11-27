@@ -4,61 +4,74 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class L258711 {
-
     public static void main(String[] args) {
         int[] solution = new L258711().solution(new int[][]{{2, 3}, {4, 3}, {1, 1}, {2, 1}});
         System.out.println("Arrays.toString(solution) = " + Arrays.toString(solution));
     }
 
-    static int[] visit;
-    static int[] parent;
-    static List<Integer>[] nodes;
-    static boolean[][] conn;
-    static int[] answer;
+    private static int n;
+    private static Set<Integer>[] nodes;
+    private static int[] in, out;
+    private static int[] answer;
 
-    public int[] solution(int[][] edges) {
-        answer = new int[4]; // start, circle, stick, 8
-        int length = Arrays.stream(edges).flatMapToInt(Arrays::stream).max().orElse(1);
-        visit = new int[length + 1];
-        parent = new int[length + 1];
-        Arrays.fill(parent, -1);
-        nodes = new List[length + 1];
-        conn = new boolean[length + 1][length + 1];
-        for (int i = 1; i <= length; i++) {
-            nodes[i] = new ArrayList<>();
+    public static int[] solution(int[][] edges) {
+        answer = new int[4];
+        n = Arrays.stream(edges).flatMapToInt(Arrays::stream).max().orElse(1);
+
+        nodes = new Set[n + 1];
+        in = new int[n + 1];
+        out = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            nodes[i] = new HashSet<>();
         }
         for (int[] e : edges) {
-            nodes[e[0]].add(e[1]);
-            parent[e[1]] = e[0];
-            conn[e[0]][e[1]] = true;
+            int u = e[0], v = e[1];
+            nodes[u].add(v);
+            out[u]++;
+            in[v]++;
         }
 
-        int root = IntStream.rangeClosed(1, length)
-                .filter(n -> parent[n] == -1).findFirst().orElse(0);
+        int root = IntStream.rangeClosed(1, n)
+                .filter(n -> in[n] == 0 && out[n] >= 2).findFirst().orElse(0);
         answer[0] = root;
-        visit[root] = 1;
-        int totalGraph = 0;
         for (int child : nodes[root]) {
-            totalGraph++;
-            search(child);
+            answer[count(child)]++;
         }
-        System.out.println(Arrays.toString(visit));
         return answer;
     }
 
-    static void search(int start) {
-        Stack<Integer> dfs = new Stack<>();
-        dfs.push(start);
-        visit[start]++;
-        while (!dfs.isEmpty()) {
-            int latest = dfs.pop();
-            for (int i : nodes[latest]) {
-                if (visit[i] == 0) {
-                    dfs.push(i);
+
+    static int count(int start) {
+        Stack<Integer> stack = new Stack<>();
+        HashSet<Integer> visited = new HashSet<>();
+        visited.add(start);
+        stack.push(start);
+        while (!stack.isEmpty()) {
+            int curr = stack.pop();
+            int type = getType(curr);
+            if (type > 0) {
+                return type;
+            }
+            for (int next : nodes[curr]) {
+                if (visited.contains(next)) {
+                    continue;
                 }
-                visit[i]++;
+                visited.add(next);
+                stack.push(next);
             }
         }
+        return 1;
     }
 
+    static int getType(int node) {
+        // start, doughnut, stick, 8
+        if (out[node] == 0) { // stick
+            return 2;
+        }
+        if (out[node] > 1) { // 8
+            return 3;
+        }
+        return -1;
+    }
 }
