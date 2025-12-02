@@ -2,6 +2,7 @@ package com.soi.programmers;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.TreeSet;
 
 public class L12920 {
     public static void main(String[] args) {
@@ -12,18 +13,17 @@ public class L12920 {
         int answer = 0;
         // {coretype, endtime, workNo}
         PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(x -> x[1]));
+        TreeSet<Integer> candidates = new TreeSet<>();
         int cLen = cores.length;
-        boolean[] occupied = new boolean[cLen];
-        int workloadNo = 0;
+        for (int i = 0; i < cores.length; i++) {
+            candidates.add(i);
+        }
+        int workloadNo = 0; // [0, 50,000]
         int currentTime = 0;
         while (workloadNo < n) {
             while (pq.size() < cLen && workloadNo < n) { // 적재
-                for (int i = 0; i < cLen; i++) {
-                    if (!occupied[i]) {
-                        pq.offer(new int[]{i, currentTime + cores[i], workloadNo++});
-                        occupied[i] = true;
-                    }
-                }
+                int i = candidates.pollFirst();
+                pq.offer(new int[]{i, currentTime + cores[i], workloadNo++});
             }
             currentTime = pq.peek()[1];
             while (!pq.isEmpty() && pq.peek()[1] == currentTime) {
@@ -31,7 +31,7 @@ public class L12920 {
                 if (next[2] == n - 1) {
                     return next[0] + 1;
                 }
-                occupied[next[0]] = false;
+                candidates.add(next[0]);
             }
         }
         // left
