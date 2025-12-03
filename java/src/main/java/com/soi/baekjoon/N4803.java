@@ -1,9 +1,7 @@
 package com.soi.baekjoon;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.StringTokenizer;
-import java.util.stream.IntStream;
 
 public class N4803 {
     static int[] parent;
@@ -33,8 +31,15 @@ public class N4803 {
                 union(u, v);
 //                System.out.println(Arrays.toString(parent));
             }
-            int treeCount = Math.toIntExact(IntStream.rangeClosed(1, n).map(a -> find(a))
-                    .distinct().filter(b -> !hasCycle[b]).count());
+            int treeCount = 0;
+            boolean[] rootVisited = new boolean[n + 1];
+            for (int i = 1; i <= n; i++) {
+                int r = find(i);
+                if (!rootVisited[r]) {
+                    rootVisited[r] = true;
+                    if (!hasCycle[r]) treeCount++;
+                }
+            }
             bw.write(getInfoStr(caseCount, treeCount) + "\n");
         }
         bw.flush();
@@ -47,17 +52,15 @@ public class N4803 {
             hasCycle[rA] = true;
             return;
         }
-        parent[Math.min(rA, rB)] = Math.max(rA, rB);
+        parent[rB] = rA;
+        if (hasCycle[rA] || hasCycle[rB]) {
+            hasCycle[rA] = true;
+        }
     }
 
     static int find(int x) {
-        if (parent[x] == x)
-            return x;
-        int p = find(parent[x]);
-        if (hasCycle[x] || hasCycle[p]) {
-            hasCycle[x] = hasCycle[p] = true;
-        }
-        return parent[x] = p;
+        if (parent[x] == x) return x;
+        return parent[x] = find(parent[x]);
     }
 
     static String getInfoStr(int caseCount, int treeCount) {
