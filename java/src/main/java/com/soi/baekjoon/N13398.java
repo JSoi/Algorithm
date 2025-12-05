@@ -12,20 +12,18 @@ public class N13398 {
         StringTokenizer tok = new StringTokenizer(br.readLine(), " ");
 
         long[] arr = new long[n + 1];
+        long[][] dp = new long[n + 1][2];
         long answer = Long.MIN_VALUE;
         for (int i = 1; i <= n; i++) {
             arr[i] = Integer.parseInt(tok.nextToken());
             answer = Math.max(answer, arr[i]);
         }
+        dp[1][0] = arr[1];
 
-        for (int i = 1; i <= n; i++) {
-            long min = arr[i];
-            long sum = arr[i];
-            for (int j = i + 1; j <= n; j++) {
-                min = Math.min(min, arr[j]);
-                sum += arr[j];
-                answer = Math.max(answer, Math.max(sum, sum - min));
-            }
+        for (int i = 2; i <= n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0] + arr[i], arr[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 2][0]) + arr[i];
+            answer = Math.max(answer, Math.max(dp[i][0], dp[i][1]));
         }
         System.out.println(answer);
     }
