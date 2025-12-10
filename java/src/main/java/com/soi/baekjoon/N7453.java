@@ -21,58 +21,55 @@ public class N7453 {
             C[i] = Long.parseLong(tok.nextToken());
             D[i] = Long.parseLong(tok.nextToken());
         }
-        long[] AB = new long[N * N]; // AB 합 저장
-        long[] CD = new long[N * N]; // CD 합 저장 (정렬필요)
+        int size = N * N;
+        long[] AB = new long[size];
+        long[] CD = new long[size];
 
         int idx = 0;
-        for (long a : A) {
-            for (long b : B) {
+        for (long a : A)
+            for (long b : B)
                 AB[idx++] = a + b;
-            }
-        }
 
         idx = 0;
-        for (long c : C) {
-            for (long d : D) {
+        for (long c : C)
+            for (long d : D)
                 CD[idx++] = c + d;
-            }
-        }
+
+        Arrays.sort(AB);
         Arrays.sort(CD);
 
-        long answer = 0;
-        for (long ab : AB) {
-            int upperBound = upperBound(CD, -ab);
-            int lowerBound = lowerBound(CD, -ab);
-            answer += upperBound - lowerBound;
-        }
+        long answer = findZeroSumCount(size, AB, CD);
+
         System.out.println(answer);
     }
 
-    static int lowerBound(long[] arr, long target) {
-        int l = 0;
-        int r = arr.length;
-        while (l < r) {
-            int m = (l + r) / 2;
-            if (arr[m] >= target) {
-                r = m;
-            } else {
-                l = m + 1;
-            }
-        }
-        return l;
-    }
+    private static long findZeroSumCount(int size, long[] AB, long[] CD) {
+        long answer = 0;
+        int abIdx = 0;
+        int cdIdx = size - 1;
 
-    static int upperBound(long[] arr, long target) {
-        int l = 0;
-        int r = arr.length;
-        while (l < r) {
-            int m = (l + r) / 2;
-            if (arr[m] > target) {
-                r = m;
+        while (abIdx < size && cdIdx >= 0) {
+            long sum = AB[abIdx] + CD[cdIdx];
+            if (sum == 0) {
+                long abVal = AB[abIdx];
+                int abCount = 0;
+                while (abIdx < size && AB[abIdx] == abVal) {
+                    abCount++;
+                    abIdx++;
+                }
+                long cdVal = CD[cdIdx];
+                int cdCount = 0;
+                while (cdIdx >= 0 && CD[cdIdx] == cdVal) {
+                    cdCount++;
+                    cdIdx--;
+                }
+                answer += (long) abCount * cdCount;
+            } else if (sum < 0) {
+                abIdx++;
             } else {
-                l = m + 1;
+                cdIdx--;
             }
         }
-        return l;
+        return answer;
     }
 }
