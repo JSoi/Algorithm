@@ -36,3 +36,28 @@ WHERE hist.CAR_ID IS NULL
               0) <= 2000000
 GROUP BY car.CAR_ID
 ORDER BY FEE DESC, car.CAR_ID DESC;
+
+-- 273711
+SELECT DISTINCT
+    child.ITEM_ID,
+    child.ITEM_NAME,
+    child.RARITY
+FROM ITEM_TREE it
+         JOIN ITEM_INFO parent
+              ON parent.ITEM_ID = it.PARENT_ITEM_ID
+                  AND parent.RARITY = 'RARE'
+         JOIN ITEM_INFO child
+              ON child.ITEM_ID = it.ITEM_ID
+ORDER BY child.ITEM_ID DESC;
+
+-- 299307
+SELECT
+    ID,
+    CASE
+        WHEN SIZE_OF_COLONY <= 100 THEN 'LOW'
+        WHEN SIZE_OF_COLONY <= 1000 THEN 'MEDIUM'
+        WHEN SIZE_OF_COLONY > 1000 THEN 'HIGH'
+        END
+        AS `SIZE`
+FROM ECOLI_DATA
+ORDER BY ID;
