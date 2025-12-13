@@ -78,3 +78,19 @@ FROM ECOLI_DATA child
               ON parent.ID = child.PARENT_ID
 WHERE parent.GENOTYPE | child.GENOTYPE = child.GENOTYPE
 ORDER BY child.ID;
+
+-- 301649
+SELECT
+    ID,
+    CASE
+        WHEN RATE <= 0.25 THEN 'LOW'
+        WHEN RATE <= 0.50 THEN 'MEDIUM'
+        WHEN RATE <= 0.75 THEN 'HIGH'
+        ELSE 'CRITICAL'
+    END AS COLONY_NAME
+FROM (
+         SELECT ID,
+                PERCENT_RANK() OVER (ORDER BY SIZE_OF_COLONY) AS RATE
+         FROM ECOLI_DATA
+     ) t
+ORDER BY ID;
