@@ -70,3 +70,11 @@ FROM ECOLI_DATA p
                    ON c.PARENT_ID = p.ID
 GROUP BY p.ID
 ORDER BY p.ID;
+
+-- 301647
+SELECT child.ID, child.GENOTYPE, parent.GENOTYPE AS PARENT_GENOTYPE
+FROM ECOLI_DATA child
+         JOIN ECOLI_DATA parent
+              ON parent.ID = child.PARENT_ID
+WHERE parent.GENOTYPE | child.GENOTYPE = child.GENOTYPE
+ORDER BY child.ID;
