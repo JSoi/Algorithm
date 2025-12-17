@@ -45,15 +45,12 @@ public class N16928 {
                 if (next > 100 || visited[next]) {
                     continue;
                 }
+                int nextPos = next;
                 if (jump.containsKey(next)) {
-                    if (!visited[jump.get(next)]) {
-                        visited[jump.get(next)] = true;
-                        queue.offer(new int[]{jump.get(next), cur[1] + 1});
-                    }
-                } else {
-                    visited[next] = true;
-                    queue.offer(new int[]{next, cur[1] + 1});
+                    nextPos = jump.get(next);
                 }
+                visited[next] = true;
+                queue.offer(new int[]{nextPos, cur[1] + 1});
             }
         }
         return answer;
