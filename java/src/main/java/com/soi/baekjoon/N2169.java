@@ -33,11 +33,11 @@ public class N2169 {
         for (int i = 2; i <= r; i++) {
             // (l -> r) 채우기
             for (int j = 1; j <= c; j++) {
-                dp[i][j][0] = Math.max(Math.max(dp[i - 1][j][0], dp[i - 1][j][1]), Math.max(dp[i][j - 1][0], dp[i][j - 1][1])) + arr[i][j];
+                dp[i][j][0] = Math.max(Math.max(dp[i - 1][j][0], dp[i - 1][j][1]), dp[i][j - 1][0]) + arr[i][j];
             }
             // (r -> l) 채우기
             for (int j = c; j >= 1; j--) {
-                dp[i][j][1] = Math.max(Math.max(dp[i - 1][j][0], dp[i - 1][j][1]), Math.max(dp[i][j + 1][1], dp[i][j + 1][1])) + arr[i][j];
+                dp[i][j][1] = Math.max(Math.max(dp[i - 1][j][0], dp[i - 1][j][1]), dp[i][j + 1][1]) + arr[i][j];
             }
         }
         System.out.println(Math.max(dp[r][c][0], dp[r][c][1]));
