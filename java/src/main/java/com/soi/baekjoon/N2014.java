@@ -3,7 +3,10 @@ package com.soi.baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class N2014 {
     private static int N, K;
@@ -28,21 +31,17 @@ public class N2014 {
         for (int i = 0; i < K; i++) {
             queue.add(arr[i]);
         }
-        HashSet<Long> visit = new HashSet<>();
         int count = 0;
         while (!queue.isEmpty()) {
             long curr = queue.poll();
-            if (visit.contains(curr)) {
-                continue;
-            }
-            visit.add(curr);
             count++;
 //            System.out.println(curr + " " + count);
             if (count == N) {
                 return curr;
             }
             for (int i = 0; i < K; i++) {
-                queue.add(arr[i] * curr);
+                queue.add(curr * arr[i]);
+                if (curr % arr[i] == 0) break;
             }
         }
         return 0;
