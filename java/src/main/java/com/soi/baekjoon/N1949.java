@@ -49,17 +49,14 @@ public class N1949 {
             return dp[target][visit ? 1 : 0];
         }
         int maxPopulation = visit ? population[target] : 0;
-        if (!visit) {
-            for (int next : conn[target]) {
-                if (next == prev) {
-                    continue;
-                }
-                maxPopulation += Math.max(dp(target, next, true), dp(target, next, false));
+        for (int next : conn[target]) {
+            if (next == prev) {
+                continue;
             }
-        } else { // 방문했을 때
-            for (int next : conn[target]) {
-                if (next == prev) continue;
+            if (visit) {
                 maxPopulation += dp(target, next, false);
+            } else {
+                maxPopulation += Math.max(dp(target, next, true), dp(target, next, false));
             }
         }
         return dp[target][visit ? 1 : 0] = maxPopulation;
