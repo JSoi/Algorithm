@@ -3,13 +3,12 @@ package com.soi.baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class N14718 {
     private static int n, k;
     private static int[][] arr;
-    private static int answer = Integer.MAX_VALUE;
-    private static boolean[] visit;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,37 +16,34 @@ public class N14718 {
         n = Integer.parseInt(tok.nextToken());
         k = Integer.parseInt(tok.nextToken());
         arr = new int[n][3];
-        visit = new boolean[n];
+        int[] a = new int[n];
+        int[] b = new int[n];
+        int[] c = new int[n];
         for (int i = 0; i < n; i++) {
             tok = new StringTokenizer(br.readLine(), " ");
-            for (int j = 0; j < 3; j++) {
-                arr[i][j] = Integer.parseInt(tok.nextToken());
+            arr[i][0] = a[i] = Integer.parseInt(tok.nextToken());
+            arr[i][1] = b[i] = Integer.parseInt(tok.nextToken());
+            arr[i][2] = c[i] = Integer.parseInt(tok.nextToken());
+        }
+        a = Arrays.stream(a).distinct().sorted().toArray();
+        b = Arrays.stream(b).distinct().sorted().toArray();
+        c = Arrays.stream(c).distinct().sorted().toArray();
+        int answer = Integer.MAX_VALUE;
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b.length; j++) {
+                for (int o = 0; o < c.length; o++) {
+                    int count = 0;
+                    for (int l = 0; l < n; l++) {
+                        if (arr[l][0] <= a[i] && arr[l][1] <= b[j] && arr[l][2] <= c[o]) {
+                            count++;
+                        }
+                    }
+                    if (count >= k) {
+                        answer = Math.min(answer, a[i] + b[j] + c[o]);
+                    }
+                }
             }
         }
-        dp(0, 0, 0, 0, 0);
         System.out.println(answer);
-    }
-
-    static void dp(int soldierIdx, int a, int b, int c, int chooseCount) {
-        if (chooseCount == k) {
-            answer = Math.min(answer, a + b + c);
-            return;
-        }
-        if (soldierIdx >= n)
-            return;
-        for (int i = soldierIdx; i < n; i++) {
-            if (visit[i]) {
-                continue;
-            }
-            visit[i] = true;
-            int nextA = Math.max(a, arr[i][0]);
-            int nextB = Math.max(b, arr[i][1]);
-            int nextC = Math.max(c, arr[i][2]);
-            if (nextA + nextB + nextC >= answer) {
-                continue;
-            }
-            dp(i, nextA, nextB, nextC, chooseCount + 1);
-            visit[i] = false;
-        }
     }
 }
