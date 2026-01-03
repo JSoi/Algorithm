@@ -51,14 +51,14 @@ public class N1719 {
         bw.flush();
     }
 
-    // share dist
     // circulate all nodes
+    // O(V*logE)
     private static void djikstra(int start) {
-        int[] prev = new int[n + 1];
+        int[] first = new int[n + 1];
         int[] dist = new int[n + 1];
         Arrays.fill(dist, INF);
         dist[start] = 0;
-        prev[start] = start;
+        first[start] = start;
         PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
         pq.offer(new int[]{start, 0});
         while (!pq.isEmpty()) {
@@ -72,24 +72,12 @@ public class N1719 {
                 int nextNode = nn[0];
                 int nextDist = nn[1];
                 if (curDist + nextDist < dist[nextNode]) {
-                    prev[nextNode] = curNode;
+                    first[nextNode] = curNode == start ? nextNode : first[curNode];
                     dist[nextNode] = curDist + nextDist;
                     pq.offer(new int[]{nextNode, curDist + nextDist});
                 }
             }
         }
-        for (int i = 1; i <= n; i++) {
-            firstSpot[start][i] = findFirstSpot(i, start, prev);
-        }
-    }
-
-    private static int findFirstSpot(int target, int root, int[] prev) {
-        if (target == root) {
-            return target;
-        }
-        if (prev[target] == root) {
-            return target;
-        }
-        return findFirstSpot(prev[target], root, prev);
+        System.arraycopy(first, 1, firstSpot[start], 1, n);
     }
 }
