@@ -3,6 +3,7 @@ package com.soi.baekjoon;
 import java.io.*;
 import java.util.Arrays;
 import java.util.StringTokenizer;
+import java.util.function.*;
 
 public class N2357 {
     private static int n;
@@ -20,8 +21,8 @@ public class N2357 {
         minTree = new long[4 * n];
         maxTree = new long[4 * n];
         Arrays.fill(minTree, Long.MAX_VALUE);
-        buildTree(minTree, 0, n - 1, 1, false);
-        buildTree(maxTree, 0, n - 1, 1, true);
+        buildTree(minTree, 0, n - 1, 1, Math::min);
+        buildTree(maxTree, 0, n - 1, 1, Math::max);
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         for (int i = 1; i <= m; i++) {
             st = new StringTokenizer(br.readLine(), " ");
@@ -32,15 +33,15 @@ public class N2357 {
         bw.flush();
     }
 
-    private static void buildTree(long[] tree, int from, int to, int node, boolean isMax) {
+    private static void buildTree(long[] tree, int from, int to, int node, LongBinaryOperator operator) {
         if (from == to) {
             tree[node] = arr[from];
             return;
         }
         int mid = (from + to) / 2;
-        buildTree(tree, from, mid, node * 2, isMax);
-        buildTree(tree, mid + 1, to, node * 2 + 1, isMax);
-        tree[node] = isMax ? Math.max(tree[node * 2], tree[node * 2 + 1]) : Math.min(tree[node * 2], tree[node * 2 + 1]);
+        buildTree(tree, from, mid, node * 2, operator);
+        buildTree(tree, mid + 1, to, node * 2 + 1, operator);
+        tree[node] = operator.applyAsLong(tree[node * 2], tree[node * 2 + 1]);
     }
 
     private static long query(int left, int right, boolean isMax) {
