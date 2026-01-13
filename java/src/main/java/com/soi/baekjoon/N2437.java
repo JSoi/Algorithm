@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class N2437 {
@@ -14,19 +16,23 @@ public class N2437 {
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++) arr[i] = Integer.parseInt(st.nextToken());
         Arrays.sort(arr);
-        boolean[] possible = new boolean[1_000_001];
+        Set<Integer> possible = new HashSet<>();
         for (int i = 0; i < n; i++) {
-            possible[arr[i]] = true;
-//            System.out.println(arr[i]);
-            for (int num = 1; num <= 1_000_000; num++) {
-                if (possible[num]) {
-                    if (num + arr[i] <= 1_000_000)
-                        possible[num + arr[i]] = true;
-                } else if (num < arr[i]) {
-                    System.out.println(num);
-                    return;
-                }
+            HashSet<Integer> tempSet = new HashSet<>();
+            for (int p : possible) {
+                tempSet.add(p + arr[i]);
             }
+            possible.add(arr[i]);
+            possible.addAll(tempSet);
+        }
+//        System.out.println(possible);
+        int answer = 1;
+        while (true) {
+            if (!possible.contains(answer)) {
+                System.out.println(answer);
+                return;
+            }
+            answer++;
         }
     }
 }
