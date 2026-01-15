@@ -1,7 +1,9 @@
 package com.soi.baekjoon;
 
 import java.io.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class N9205 {
     public static void main(String[] args) throws IOException {
@@ -23,78 +25,41 @@ public class N9205 {
     }
 
     private static class TestCase {
-        Position start;
-        Position end;
+        int start;
+        int end;
         int v;
-        Map<Position, List<Position>> connMap;
-        Set<Position> visited;
+        boolean[] visit;
+        int[][] conn;
 
         private TestCase(int[][] conn) {
-            start = new Position(conn[0][0], conn[0][1]);
-            end = new Position(conn[conn.length - 1][0], conn[conn.length - 1][1]);
+            start = 0;
             v = conn.length;
-            connMap = new HashMap<>();
-            for (int i = 0; i < v; i++) {
-                connMap.put(new Position(conn[i][0], conn[i][1]), new ArrayList<>());
-            }
-            findConnection(conn);
-            visited = new HashSet<>();
-        }
-
-        private void findConnection(int[][] conn) {
-            for (int i = 0; i < v - 1; i++) {
-                for (int j = i + 1; j < v; j++) {
-                    int dist = Math.abs(conn[i][0] - conn[j][0]) + Math.abs(conn[i][1] - conn[j][1]);
-                    if ((double) dist / 50 <= 20) {
-                        Position from = new Position(conn[i][0], conn[i][1]);
-                        Position to = new Position(conn[j][0], conn[j][1]);
-                        connMap.get(from).add(to);
-                        connMap.get(to).add(from);
-                    }
-                }
-            }
+            end = v - 1;
+            this.conn = conn;
+            visit = new boolean[v];
         }
 
         public boolean isAbleToArrive() {
-            Queue<Position> queue = new LinkedList<>();
-            visited.add(start);
+            Queue<Integer> queue = new LinkedList<>();
+            visit[start] = true;
             queue.offer(start);
             while (!queue.isEmpty()) {
-                Position current = queue.poll();
-                if (current.equals(end)) {
+                int cur = queue.poll();
+                if (cur == end) {
                     return true;
                 }
-                for (Position next : connMap.get(current)) {
-                    if (visited.contains(next)) {
+                for (int i = 0; i < v; i++) {
+                    if (visit[i]) {
                         continue;
                     }
-                    queue.offer(next);
-                    visited.add(next);
+                    int dist = Math.abs(conn[cur][0] - conn[i][0]) + Math.abs(conn[cur][1] - conn[i][1]);
+                    if (dist <= 1000) {
+                        visit[i] = true;
+                        queue.offer(i);
+                    }
                 }
             }
             return false;
-        }
-    }
-
-    private static class Position {
-        int row;
-        int col;
-
-        public Position(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || getClass() != o.getClass()) return false;
-            Position position = (Position) o;
-            return row == position.row && col == position.col;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(row, col);
         }
     }
 }
