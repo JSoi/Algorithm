@@ -1,46 +1,40 @@
 package com.soi.programmers;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.TreeSet;
-
 public class L12920 {
     public static void main(String[] args) {
         System.out.println(new L12920().solution(6, new int[]{1, 2, 3}));
     }
 
     public int solution(int n, int[] cores) {
-        int answer = 0;
-        // {coretype, endtime, workNo}
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(x -> x[1]));
-        TreeSet<Integer> candidates = new TreeSet<>();
-        int cLen = cores.length;
+        long left = 0;
+        long right = 100_000_000L;
+        while (left < right) {
+            long mid = (left + right) / 2;
+            if (getWorkDoneCount(cores, mid) >= n) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        long time = left;
+        long doneBefore = getWorkDoneCount(cores, time - 1);
         for (int i = 0; i < cores.length; i++) {
-            candidates.add(i);
-        }
-        int workloadNo = 0; // [0, 50,000]
-        int currentTime = 0;
-        while (workloadNo < n) {
-            while (pq.size() < cLen && workloadNo < n) { // 적재
-                int i = candidates.pollFirst();
-                pq.offer(new int[]{i, currentTime + cores[i], workloadNo++});
-            }
-            currentTime = pq.peek()[1];
-            while (!pq.isEmpty() && pq.peek()[1] == currentTime) {
-                int[] next = pq.poll();
-                if (next[2] == n - 1) {
-                    return next[0] + 1;
+            if (time % cores[i] == 0) {
+                doneBefore++;
+                if (doneBefore == n) {
+                    return i + 1;
                 }
-                candidates.add(next[0]);
             }
         }
-        // left
-        while (!pq.isEmpty()) {
-            int[] next = pq.poll();
-            if (next[2] == n - 1) {
-                return next[0] + 1;
-            }
+        return 0;
+    }
+
+    private int getWorkDoneCount(int[] cores, long time) {
+        if (time < 0) return 0;
+        int cnt = 0;
+        for (int core : cores) {
+            cnt += (int) ((time / core) + 1);
         }
-        return answer;
+        return cnt;
     }
 }
