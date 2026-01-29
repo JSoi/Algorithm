@@ -10,13 +10,16 @@ import java.util.StringTokenizer;
  */
 public class N2637 {
     private static List<int[]>[] nextConnections;
-    private static int[] necessaryCounts;
+    private static boolean[] visited;
+    private static int[][] countConn;
+    private static int n;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+        n = Integer.parseInt(br.readLine());
         int m = Integer.parseInt(br.readLine());
-        necessaryCounts = new int[n + 1];
+        visited = new boolean[n + 1];
+        countConn = new int[n + 1][n + 1];
         nextConnections = new ArrayList[n + 1];
         for (int i = 1; i <= n; i++) {
             nextConnections[i] = new ArrayList<>();
@@ -29,27 +32,36 @@ public class N2637 {
             int k = Integer.parseInt(st.nextToken());
             nextConnections[x].add(new int[]{y, k});
         }
-        dp(n, 1);
-//        System.out.println(Arrays.toString(necessaryCounts));
+        dp(n);
+//        System.out.println(Arrays.deepToString(countConn));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         for (int i = 1; i <= n; i++) {
-            if (necessaryCounts[i] == 0) {
+            if (countConn[n][i] == 0) {
                 continue;
             }
-            bw.write(i + " " + necessaryCounts[i] + "\n");
+            bw.write(i + " " + countConn[n][i] + "\n");
         }
         bw.flush();
     }
 
-    private static void dp(int componentIdx, int count) {
-        if (nextConnections[componentIdx].isEmpty()) {
-            necessaryCounts[componentIdx] += count;
+    private static void dp(int index) {
+        // 필요한 leaf를 업데이트하는 과정
+        if (visited[index]) {
             return;
         }
-        for (int[] nn : nextConnections[componentIdx]) {
+        visited[index] = true;
+        if (nextConnections[index].isEmpty()) { // leaf 처리
+            countConn[index][index] = 1;
+            return;
+        }
+        // 바로 leaf로 향해 연산 횟수 줄이도록 수정
+        for (int[] nn : nextConnections[index]) {
             int nextIdx = nn[0];
-            int nextCount = nn[1];
-            dp(nextIdx, count * nextCount);
+            int nextCnt = nn[1];
+            dp(nextIdx);
+            for (int i = 1; i <= n; i++) {
+                countConn[index][i] += countConn[nextIdx][i] * nextCnt;
+            }
         }
     }
 }
