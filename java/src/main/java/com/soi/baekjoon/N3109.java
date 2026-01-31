@@ -3,23 +3,12 @@ package com.soi.baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class N3109 {
     private static int r, c, answer;
     private static boolean[][] wall;
-    private static final int[][] movement = new int[][]{{1, 1}, {0, 1}, {-1, 1}};
-
-    private static class Point {
-        int row;
-        int col;
-
-        public Point(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
-    }
+    private static final int[][] movement = new int[][]{ {-1, 1}, {0, 1}, {1, 1}};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -36,37 +25,29 @@ public class N3109 {
 
         for (int i = 0; i < r; i++) {
             if (!wall[i][0]) {
-                dfs(i, 0);
+                wall[i][0] = true;
+                if (dfs(i, 0)) {
+                    answer++;
+                }
             }
         }
         System.out.println(answer);
     }
 
-    private static void dfs(int rr, int cc) {
-        int[] track = new int[c];
-        track[0] = rr;
-        Stack<Point> stack = new Stack<>();
-        boolean[][] visit = new boolean[r][c];
-        stack.push(new Point(rr, cc));
-        visit[rr][cc] = true;
-        while (!stack.isEmpty()) {
-            Point curr = stack.pop();
-            if (curr.col == c - 1) {
-                for (int i = 0; i < c; i++) {
-                    wall[track[i]][i] = true;
-                }
-                answer++;
-                return;
-            }
-            for (int[] m : movement) {
-                int nR = curr.row + m[0];
-                int nC = curr.col + m[1];
-                if (!inRange(nR, nC) || visit[nR][nC] || wall[nR][nC]) continue;
-                visit[nR][nC] = true;
-                track[nC] = nR;
-                stack.push(new Point(nR, nC));
+    private static boolean dfs(int rr, int cc) {
+        if (cc == c - 1) {
+            return true;
+        }
+        for (int[] m : movement) {
+            int nR = rr + m[0];
+            int nC = cc + m[1];
+            if (!inRange(nR, nC) || wall[nR][nC]) continue;
+            wall[nR][nC] = true;
+            if (dfs(nR, nC)) {
+                return true;
             }
         }
+        return false;
     }
 
     private static boolean inRange(int i, int j) {
