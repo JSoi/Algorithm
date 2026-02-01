@@ -11,6 +11,15 @@ public class N2616 {
         int n = Integer.parseInt(br.readLine());
         int[] arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         int len = Integer.parseInt(br.readLine());
+        if (len == 1) {
+            Arrays.sort(arr);
+            int res = 0;
+            for (int i = n - 1; i >= n - 3; i--) {
+                res += arr[i];
+            }
+            System.out.println(res);
+            return;
+        }
         int[][] dp = new int[n][4];
         int sum = 0;
         int[] sums = new int[n];
