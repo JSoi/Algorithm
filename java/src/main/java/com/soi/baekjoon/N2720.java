@@ -1,57 +1,45 @@
 package com.soi.baekjoon;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class N2720 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
+
         int testCase = Integer.parseInt(br.readLine());
         while (testCase-- > 0) {
-            int intCost = Integer.parseInt(br.readLine());
-            CoinCalculator cal = new CoinCalculator(intCost);
-            bw.write(cal.getStatus() + "\n");
+            int change = Integer.parseInt(br.readLine());
+            sb.append(CoinCalculator.calculate(change)).append("\n");
         }
-        bw.flush();
-        bw.close();
+        System.out.print(sb);
     }
 
     private static class CoinCalculator {
-        private final Map<Integer, Coin> coins = Coin.getCoinMap();
-        private final List<Integer> coinCount = new ArrayList<>(4);
-        private int cost; // * 100
+        private static final Coin[] COINS = Coin.values();
 
-        public CoinCalculator(int c) {
-            this.cost = c;
-            for (int i = 0; i < coins.size(); i++) {
-                int count = cost / coins.get(i).cost;
-                coinCount.add(count);
-                cost -= count * coins.get(i).cost;
+        public static String calculate(int amount) {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < COINS.length; i++) {
+                int count = amount / COINS[i].value;
+                amount %= COINS[i].value;
+                result.append(count);
+                if (i < COINS.length - 1) result.append(" ");
             }
-        }
-
-        public String getStatus() {
-            return coinCount.stream().map(String::valueOf).collect(Collectors.joining(" "));
+            return result.toString();
         }
     }
 
-    private enum Coin { // 순서 보장 필요 - idx starts from 0
-        QUARTER(25, 0), DIME(10, 1), NICKEL(5, 2), PENNY(1, 3);
-        private final int cost;
-        private final int order;
+    private enum Coin {
+        // 가치 내림차순
+        QUARTER(25), DIME(10), NICKEL(5), PENNY(1);
 
-        Coin(int cost, int order) {
-            this.cost = cost;
-            this.order = order;
-        }
+        private final int value;
 
-        public static Map<Integer, Coin> getCoinMap() {
-            return Arrays.stream(Coin.values()).collect(Collectors.toMap(coin -> coin.order, coin -> coin));
+        Coin(int value) {
+            this.value = value;
         }
     }
 }
