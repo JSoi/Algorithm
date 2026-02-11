@@ -21,7 +21,6 @@ public class M16953 {
         }
         if (value == b) {
             count = Math.min(count, nCount);
-            return;
         } else {
             solve(nCount + 1, value * 2);
             long good = Long.parseLong(value + "1");

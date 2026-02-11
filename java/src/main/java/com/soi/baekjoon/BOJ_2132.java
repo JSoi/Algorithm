@@ -1,0 +1,61 @@
+package com.soi.baekjoon;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * <a href = "https://www.acmicpc.net/problem/2132">나무위의 벌레</a>
+ */
+public class BOJ_2132 {
+    static int[] fruitStatus;
+    static int vertex;
+    static List<Integer>[] conn;
+    static int maxFruit;
+    static int farthestNode;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        vertex = Integer.parseInt(br.readLine());
+        fruitStatus = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        conn = new List[vertex];
+        for (int i = 0; i < conn.length; i++) {
+            conn[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < vertex - 1; i++) {
+            String[] input = br.readLine().split(" ");
+            int a = Integer.parseInt(input[0]) - 1;
+            int b = Integer.parseInt(input[1]) - 1;
+            conn[a].add(b);
+            conn[b].add(a);
+        }
+
+        farthestNode = 0;
+        maxFruit = 0;
+
+        dfs(0, -1, fruitStatus[0]);
+        int bestStart = farthestNode;
+        dfs(farthestNode, -1, fruitStatus[farthestNode]);
+
+        System.out.printf("%d %d%n", maxFruit, Math.min(farthestNode, bestStart) + 1);
+
+    }
+
+    static void dfs(int node, int parent, int acc) {
+        if (acc > maxFruit) {
+            maxFruit = acc;
+            farthestNode = node;
+        } else if (acc == maxFruit) {
+            farthestNode = Math.min(farthestNode, node);
+        }
+
+        for (int next : conn[node]) {
+            if (next != parent) {
+                dfs(next, node, acc + fruitStatus[next]);
+            }
+        }
+    }
+}
