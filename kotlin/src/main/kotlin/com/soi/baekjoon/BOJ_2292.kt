@@ -1,12 +1,7 @@
 package com.soi.baekjoon
-
 import java.util.Scanner
 
-class N2292 {
-
-}
-
-private fun getAnswer(userInteger:Long) :Long {
+fun getAnswer(userInteger: Long): Long {
     var lastNumber = 1L;
     var timeCal = 0L;
     while (true) {
@@ -21,5 +16,5 @@ private fun getAnswer(userInteger:Long) :Long {
 
 fun main() {
     val scan = Scanner(System.`in`)
-    println(getAnswer(scan.nextLong()))
+    print(getAnswer(scan.nextLong()))
 }
