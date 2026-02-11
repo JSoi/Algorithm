@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L70 {
+public class LC_70 {
     public int climbStairs(int n) {
         if (n <= 2) {
             return n;

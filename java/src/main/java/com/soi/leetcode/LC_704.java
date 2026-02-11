@@ -4,14 +4,14 @@ package com.soi.leetcode;
 import java.util.Arrays;
 
 //https://leetcode.com/problems/binary-search/
-public class L704 {
+public class LC_704 {
     public static void main(String[] args) {
 
     }
 
     public int search(int[] nums, int target) {
         //Already Sorted
-        int start = 0, end = nums.length-1;
+        int start = 0, end = nums.length - 1;
         while (start <= end) {
             int mid = ((start + end) / 2);
             if (nums[mid] < target) {

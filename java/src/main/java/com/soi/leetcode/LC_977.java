@@ -2,7 +2,7 @@ package com.soi.leetcode;
 
 import java.util.Arrays;
 
-public class L977 {
+public class LC_977 {
     public static void main(String[] args) {
     }
 

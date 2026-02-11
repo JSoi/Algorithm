@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L136 {
+public class LC_136 {
     public int singleNumber(int[] nums) {
         if (nums.length == 1) return nums[0];
         int num = 0;

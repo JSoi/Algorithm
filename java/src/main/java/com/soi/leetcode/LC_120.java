@@ -2,7 +2,7 @@ package com.soi.leetcode;
 
 import java.util.List;
 
-public class L120 {
+public class LC_120 {
     public int minimumTotal(List<List<Integer>> triangle) {
         int size = triangle.size();
         int[] result = new int[size + 1];

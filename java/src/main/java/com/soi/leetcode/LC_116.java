@@ -3,28 +3,7 @@ package com.soi.leetcode;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class L116 {
-    class Node {
-        public int val;
-        public Node left;
-        public Node right;
-        public Node next;
-
-        public Node() {
-        }
-
-        public Node(int _val) {
-            val = _val;
-        }
-
-        public Node(int _val, Node _left, Node _right, Node _next) {
-            val = _val;
-            left = _left;
-            right = _right;
-            next = _next;
-        }
-    }
-
+public class LC_116 {
     public Node connect(Node root) {
         Queue<Node> queue = new LinkedList<>();
         queue.offer(root);
@@ -48,5 +27,26 @@ public class L116 {
             // per level
         }
         return root;
+    }
+
+    class Node {
+        public int val;
+        public Node left;
+        public Node right;
+        public Node next;
+
+        public Node() {
+        }
+
+        public Node(int _val) {
+            val = _val;
+        }
+
+        public Node(int _val, Node _left, Node _right, Node _next) {
+            val = _val;
+            left = _left;
+            right = _right;
+            next = _next;
+        }
     }
 }

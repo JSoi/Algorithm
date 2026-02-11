@@ -3,24 +3,7 @@ package com.soi.leetcode;
 import java.util.Collections;
 import java.util.LinkedList;
 
-public class L21 {
-    private class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
+public class LC_21 {
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
         if (list1 == null) {
             return list2;
@@ -45,5 +28,22 @@ public class L21 {
             next = next.next;
         }
         return real;
+    }
+
+    private class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode() {
+        }
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
     }
 }

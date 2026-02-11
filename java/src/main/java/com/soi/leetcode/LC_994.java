@@ -3,7 +3,7 @@ package com.soi.leetcode;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class L994 {
+public class LC_994 {
     int[] ds = {0, 0, 1, -1};
     int[] dg = {1, -1, 0, 0};
     int garo, sero;

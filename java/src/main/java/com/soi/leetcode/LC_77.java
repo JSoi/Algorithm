@@ -1,10 +1,9 @@
 package com.soi.leetcode;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-public class L77 {
+public class LC_77 {
     public static void main(String[] args) {
         List<List<Integer>> answer = combine(4, 2);
         for (List<Integer> a : answer) {

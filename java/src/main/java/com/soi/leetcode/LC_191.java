@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L191 {
+public class LC_191 {
     public int hammingWeight(int number) {
         String str = Integer.toBinaryString(number);
         int count = 0;

@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class L1 {
+public class LC_1 {
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(new L1().twoSum(new int[]{3, 2, 4}, 6)));
+        System.out.println(Arrays.toString(new LC_1().twoSum(new int[]{3, 2, 4}, 6)));
     }
 
     public int[] twoSum(int[] nums, int target) {

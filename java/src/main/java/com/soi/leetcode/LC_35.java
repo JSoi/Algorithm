@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L35 {
+public class LC_35 {
     public int searchInsert(int[] nums, int target) {
         int start = 0, end = nums.length - 1;
         while (start <= end) {

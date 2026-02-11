@@ -1,7 +1,7 @@
 package com.soi.leetcode;
 
 //https://leetcode.com/problems/first-bad-version/
-public class L178 {
+public class LC_178 {
     public boolean isBadVersion(int index) { // super class에 명시되어 있으나 명확하지 않아서 작성하지 않음
         return true;
     }

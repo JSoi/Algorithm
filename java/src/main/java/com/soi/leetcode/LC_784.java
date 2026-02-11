@@ -3,7 +3,7 @@ package com.soi.leetcode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class L784 {
+public class LC_784 {
     public List<String> letterCasePermutation(String s) {
         List<String> answer = new ArrayList<String>();
         if (s.length() == 0) {
@@ -14,11 +14,11 @@ public class L784 {
                 answer.add(s.toUpperCase());
                 answer.add(s.toLowerCase());
             } else {
-                answer.add(s + "");
+                answer.add(s);
             }
             return answer;
         }
-        List<String> temp = letterCasePermutation(s.substring(1, s.length()));
+        List<String> temp = letterCasePermutation(s.substring(1));
         if (Character.isAlphabetic(s.charAt(0))) {
             for (String str : temp) {
                 answer.add((s.charAt(0) + "").toUpperCase() + str);

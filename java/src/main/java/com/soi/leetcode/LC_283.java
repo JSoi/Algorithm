@@ -1,10 +1,7 @@
 package com.soi.leetcode;
 
 
-
-import java.util.Arrays;
-
-public class L283 {
+public class LC_283 {
 
     public void moveZeroes(int[] nums) { // 시간이 너무 오래 걸린다 ... 그래서 수정
         int last = nums.length - 1;

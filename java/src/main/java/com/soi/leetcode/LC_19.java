@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L19 {
+public class LC_19 {
     public ListNode removeNthFromEnd(ListNode head, int n) {
         int count = 0;
         ListNode temp = head;

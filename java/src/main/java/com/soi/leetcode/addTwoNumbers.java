@@ -1,7 +1,6 @@
 package com.soi.leetcode;
 
 
-
 public class addTwoNumbers {
     //https://leetcode.com/problems/add-two-numbers/
     public static void main(String[] args) {

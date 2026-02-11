@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L695 {
+public class LC_695 {
     int count;
     boolean[][] visit;
     int[] dx = {0, 0, 1, -1};

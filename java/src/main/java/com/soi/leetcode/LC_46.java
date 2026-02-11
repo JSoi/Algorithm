@@ -3,7 +3,7 @@ package com.soi.leetcode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class L46 {
+public class LC_46 {
     List<List<Integer>> answer = new ArrayList<>();
     boolean[] visit;
     int[] number;

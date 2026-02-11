@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L231 {
+public class LC_231 {
     public boolean isPowerOfTwo(int n) {
         System.out.println(4 >> 1);
         if (n <= 0) return false;

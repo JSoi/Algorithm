@@ -3,7 +3,7 @@ package com.soi.leetcode;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class L542 {
+public class LC_542 {
     final int[] dx = {0, 0, 1, -1};
     final int[] dy = {1, -1, 0, 0};
     int garo, sero;
@@ -38,10 +38,7 @@ public class L542 {
     }
 
     public boolean isRange(int s, int g) {
-        if (s < 0 || g < 0 || s >= sero || g >= garo) {
-            return false;
-        }
-        return true;
+        return s >= 0 && g >= 0 && s < sero && g < garo;
     }
 
     class Point {

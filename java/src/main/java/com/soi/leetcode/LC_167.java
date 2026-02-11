@@ -1,6 +1,6 @@
 package com.soi.leetcode;
 
-public class L167 {
+public class LC_167 {
     public int[] twoSum(int[] numbers, int target) {
         int low = 0, high = numbers.length - 1;
         do {
