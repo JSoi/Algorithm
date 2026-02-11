@@ -11,7 +11,7 @@ import java.util.List;
 public class POG_155651 {
 
     public static void main(String[] args) {
-        L155651 l155651 = new POG_155651();
+        POG_155651 l155651 = new POG_155651();
         int solution = l155651.solution(new String[][]{{"15:00", "17:00"}, {"16:40", "18:20"}, {"14:20", "15:20"}, {"14:10", "19:20"}, {"18:20", "21:20"}});
         System.out.println(solution);
     }

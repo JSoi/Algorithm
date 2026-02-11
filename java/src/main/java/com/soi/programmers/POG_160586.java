@@ -9,7 +9,7 @@ public class POG_160586 {
     int[] minCount = new int['Z' - 'A' + 1];
 
     public static void main(String[] args) {
-        L160586 solution = new POG_160586();
+        POG_160586 solution = new POG_160586();
         String[] keymap = {"ABACD", "BCEFD"};
         String[] targets = {"ABCD", "AABB"};
         System.out.println(Arrays.toString(solution.solution(keymap, targets)));

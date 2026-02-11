@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
  */
 public class POG_176963 {
     public static void main(String[] args) {
-        L176963 l176963 = new POG_176963();
+        POG_176963 l176963 = new POG_176963();
         int[] solution = l176963.solution(new String[]{"may", "kein", "kain", "radi"}, new int[]{5, 10, 1, 3}, new String[][]{{"may", "kein", "kain", "radi"}, {"may", "kein", "brin", "deny"}, {"kon", "kain", "may", "coni"}});
 //        System.out.println(("[[\"may\", \"kein\", \"kain\", \"radi\"],[\"may\", \"kein\", \"brin\", \"deny\"], [\"kon\", \"kain\", \"may\", \"coni\"]]")
 //                .replaceAll("\\[", "\\{").replaceAll("\\]", "\\}"));

@@ -10,8 +10,7 @@ public class POG_258707 {
     private static int targetSum;
 
     public static void main(String[] args) {
-//        System.out.println(L258707.solution(4, new int[]{3, 6, 7, 2, 1, 10, 5, 9, 8, 12, 11, 4}));
-        System.out.println(L258707.solution(3, new int[]{1, 2, 3, 4, 5, 8, 6, 7, 9, 10, 11, 12}));
+        System.out.println(POG_258707.solution(3, new int[]{1, 2, 3, 4, 5, 8, 6, 7, 9, 10, 11, 12}));
     }
 
     public static int solution(int coin, int[] c) {

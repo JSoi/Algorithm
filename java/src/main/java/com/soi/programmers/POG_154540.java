@@ -10,7 +10,7 @@ import java.util.Stack;
  */
 public class POG_154540 {
     public static void main(String[] args) {
-        L154540 l154540 = new POG_154540();
+        POG_154540 l154540 = new POG_154540();
         System.out.println(Arrays.toString(l154540.solution(new String[]{"X591X", "X1X5X", "X231X", "1XXX1"})));
     }
 

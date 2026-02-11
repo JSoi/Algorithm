@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class POG_178871 {
     public static void main(String[] args) {
-        L178871 test = new POG_178871();
+        POG_178871 test = new POG_178871();
         String[] result = test.solution(new String[]{"mumu", "soe", "poe", "kai", "mine"}, new String[]{"kai", "kai", "mine", "mine"});
         Arrays.stream(result).forEach(System.out::println);
     }

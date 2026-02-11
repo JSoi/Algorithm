@@ -11,7 +11,7 @@ public class POG_135808 {
         int m = 4;
         int[] score = {1, 2, 3, 1, 2, 3, 1};
         int solution = new POG_135808().solution(k, m, score);
-        Logger.getLogger(L135808.class.getName()).info(String.valueOf(solution));
+        Logger.getLogger(POG_135808.class.getName()).info(String.valueOf(solution));
 
     }
 

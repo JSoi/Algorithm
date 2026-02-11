@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class POG_12904 {
     public static void main(String[] args) {
-        L12904 test = new POG_12904();
+        POG_12904 test = new POG_12904();
         int solution = test.solution("abcdcba");
         System.out.println("solution = " + solution);
 

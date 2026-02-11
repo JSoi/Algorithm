@@ -20,8 +20,8 @@ public class POG_152996 {
     }
 
     public static void main(String[] args) {
-        L152996 solution = new POG_152996();
-        L152996 solution2 = new POG_152996();
+        POG_152996 solution = new POG_152996();
+        POG_152996 solution2 = new POG_152996();
         System.out.println(solution.solution(new int[]{100, 180, 360, 100, 270}));
 //        System.out.println("L152996.main");
 //        System.out.println(solution2.solution(new int[]{100, 100, 100, 100, 100}));

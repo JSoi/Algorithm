@@ -5,7 +5,7 @@ public class POG_133499 {
     public static final String[] WORDS = new String[]{"aya", "ye", "woo", "ma"};
 
     public static void main(String[] args) {
-        L133499 l133499 = new POG_133499();
+        POG_133499 l133499 = new POG_133499();
         int solution = l133499.solution(new String[]{"aya", "yee", "u", "maa"});
         System.out.println(solution);
 

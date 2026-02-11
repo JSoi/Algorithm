@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class POG_118667 {
     public static void main(String[] args) throws Exception {
-        Assertions.check(L118667.solution(new int[]{3, 2, 7, 2}, new int[]{4, 6, 5, 1}), 2);
-        Assertions.check(L118667.solution(new int[]{1, 2, 1, 2}, new int[]{1, 10, 1, 2}), 7);
+        Assertions.check(POG_118667.solution(new int[]{3, 2, 7, 2}, new int[]{4, 6, 5, 1}), 2);
+        Assertions.check(POG_118667.solution(new int[]{1, 2, 1, 2}, new int[]{1, 10, 1, 2}), 7);
     }
 
     public static int solution(int[] queue1, int[] queue2) {

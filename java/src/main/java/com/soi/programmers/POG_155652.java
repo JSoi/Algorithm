@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 public class POG_155652 {
     public static void main(String[] args) {
-        L155652 L155652 = new POG_155652();
+        POG_155652 L155652 = new POG_155652();
         System.out.println(L155652.solution("aukks", "wbqd", 5));
     }
 
