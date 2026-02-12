@@ -10,11 +10,11 @@ import java.io.InputStreamReader
 
 data class Pos(val r: Int, val c: Int)
 
-val br = BufferedReader(InputStreamReader(System.`in`))
-val map = Array(12) { CharArray(6) }
-val visit = Array(12) { BooleanArray(6) }
+private val br = BufferedReader(InputStreamReader(System.`in`))
+private val map = Array(12) { CharArray(6) }
+private val visit = Array(12) { BooleanArray(6) }
 
-val dirs = arrayOf(
+private val dirs = arrayOf(
     intArrayOf(-1, 0),
     intArrayOf(1, 0),
     intArrayOf(0, -1),
@@ -40,7 +40,7 @@ fun main() {
     println(answer)
 }
 
-fun findPops(): MutableSet<Pos> {
+private fun findPops(): MutableSet<Pos> {
     val pops = mutableSetOf<Pos>()
 
     for (r in 0 until 12)
@@ -57,7 +57,7 @@ fun findPops(): MutableSet<Pos> {
     return pops
 }
 
-fun bfs(sr: Int, sc: Int, pops: MutableSet<Pos>) {
+private fun bfs(sr: Int, sc: Int, pops: MutableSet<Pos>) {
     val color = map[sr][sc]
     val group = mutableListOf<Pos>()
     val q = ArrayDeque<Pos>()
@@ -84,7 +84,7 @@ fun bfs(sr: Int, sc: Int, pops: MutableSet<Pos>) {
     if (group.size >= 4) pops.addAll(group)
 }
 
-fun gravity() {
+private fun gravity() {
     for (c in 0 until 6) {
         var write = 11
 
@@ -100,5 +100,5 @@ fun gravity() {
     }
 }
 
-fun inRange(r: Int, c: Int) =
+private fun inRange(r: Int, c: Int) =
     r in 0 until 12 && c in 0 until 6
