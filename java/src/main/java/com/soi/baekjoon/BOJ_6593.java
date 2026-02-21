@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-public class N6593 {
+public class BOJ_6593 {
     private static boolean[][][] isWall;
     private static int r, c, h;
     private static int[] start, end;
