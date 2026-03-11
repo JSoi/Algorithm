@@ -40,12 +40,7 @@ public class BOJ_17472 {
 
         // find bridge
         islandConnection = new int[islandCount + 1][islandCount + 1];
-        for (int[] ii : islandConnection) {
-            Arrays.fill(ii, INF);
-        }
-        for (int ii = 1; ii <= islandCount; ii++) {
-            findBridge(ii);
-        }
+        findBridge();
 
 //        System.out.println("map");
 //        for (int[] mm : map) {
@@ -136,43 +131,34 @@ public class BOJ_17472 {
         }
     }
 
-    private static void findBridge(int islandType) {
-        boolean[][][] v = new boolean[r][c][4];
-        Queue<int[]> queue = new ArrayDeque<>();
+    private static void findBridge() {
+        islandConnection = new int[islandCount + 1][islandCount + 1];
+        for (int[] row : islandConnection) Arrays.fill(row, INF);
+
         for (int i = 0; i < r; i++) {
             for (int j = 0; j < c; j++) {
-                if (islandType == map[i][j]) {
-                    visited[i][j] = true;
-                    for (int d = 0; d < 4; d++) {
-                        int nR = i + dir[d][0];
-                        int nC = j + dir[d][1];
-                        if (!inRange(nR, nC) || v[nR][nC][d] || map[nR][nC] == islandType) {
-                            continue;
-                        }
-                        v[nR][nC][d] = true;
-                        queue.offer(new int[]{nR, nC, 1, d});
-                    }
-                }
-            }
-        }
-        while (!queue.isEmpty()) {
-            int[] curr = queue.poll();
-            // reach another island
+                if (map[i][j] == 0) continue;
 
-            if (map[curr[0]][curr[1]] != 0 && map[curr[0]][curr[1]] != islandType) {
-                if (curr[2] > 2) {
-                    islandConnection[islandType][map[curr[0]][curr[1]]] = Math.min(curr[2] - 1, islandConnection[islandType][map[curr[0]][curr[1]]]);
-                    islandConnection[map[curr[0]][curr[1]]][islandType] = Math.min(curr[2] - 1, islandConnection[map[curr[0]][curr[1]]][islandType]);
+                int from = map[i][j];
+                for (int d = 0; d < 4; d++) {
+                    int nr = i + dir[d][0];
+                    int nc = j + dir[d][1];
+                    int len = 0;
+
+                    while (inRange(nr, nc) && map[nr][nc] == 0) {
+                        len++;
+                        nr += dir[d][0];
+                        nc += dir[d][1];
+                    }
+
+                    if (!inRange(nr, nc)) continue;
+                    if (map[nr][nc] == from) continue;
+                    if (len < 2) continue;
+
+                    int to = map[nr][nc];
+                    islandConnection[from][to] = Math.min(islandConnection[from][to], len);
+                    islandConnection[to][from] = Math.min(islandConnection[to][from], len);
                 }
-                continue;
-            }
-            int cDir = curr[3];
-            int nR = curr[0] + dir[cDir][0];
-            int nC = curr[1] + dir[cDir][1];
-            int cCost = curr[2];
-            if (inRange(nR, nC) && !v[nR][nC][cDir] && map[nR][nC] != islandType) {
-                v[nR][nC][cDir] = true;
-                queue.offer(new int[]{nR, nC, cCost + 1, cDir});
             }
         }
 
