@@ -12,19 +12,14 @@ public class BOJ_10211 {
             int n = Integer.parseInt(br.readLine());
             int[] arr = Arrays.stream(br.readLine().split(" "))
                     .mapToInt(Integer::parseInt).toArray();
-            int[] sumArr = Arrays.copyOf(arr, arr.length);
+            int[] dp = new int[n];
+            dp[0] = arr[0];
+            int answer = dp[0];
             for (int i = 1; i < n; i++) {
-                sumArr[i] += sumArr[i - 1];
+                dp[i] = Math.max(arr[i], dp[i - 1] + arr[i]);
+                answer = Math.max(answer, dp[i]);
             }
-            int max = sumArr[0];
-            for (int i = 1; i < n; i++) {
-                int maxValue = sumArr[i];
-                for (int j = 0; j < i; j++) {
-                    maxValue = Math.max(maxValue, sumArr[i] - sumArr[j]);
-                }
-                max = Math.max(max, maxValue);
-            }
-            bw.write(max + "\n");
+            bw.write(answer + '\n');
         }
         bw.flush();
     }
