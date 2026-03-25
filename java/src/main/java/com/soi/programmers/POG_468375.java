@@ -10,20 +10,15 @@ public class POG_468375 {
         System.out.println(sol1 + " = " + 36);
     }
 
-    private static int[][] dist, panels;
-    private static int[] toElevator;
-    private static Map<Integer, Set<Integer>> conn;
+    private static int[][] dist;
     private static char[][] map;
     private static int r, c, elevR, elevC, panelCount;
     private static int answer = Integer.MAX_VALUE;
-    private static boolean[][] prerequisite;
-    private static boolean[] preChecked;
     private static final int[][] dir = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-    public static int solution(int h, String[] grid, int[][] p, int[][] seqs) {
+    public static int solution(int h, String[] grid, int[][] panels, int[][] seqs) {
         r = grid.length;
         c = grid[0].length();
-        panels = p;
         map = new char[r][c];
         panelCount = panels.length;
         for (int i = 0; i < r; i++) {
@@ -36,91 +31,70 @@ public class POG_468375 {
             }
         }
         // 거리 정리
-        dist = new int[panelCount][panelCount];
-        toElevator = new int[panelCount];
-        Arrays.fill(toElevator, -1);
-        for (int[] dd : dist) {
-            Arrays.fill(dd, -1);
+        dist = new int[panelCount + 1][panelCount + 1];
+        for (int i = 1; i < panelCount + 1; i++) {
+            dist[0][i] = dist[i][0] = distance(elevR, elevC, panels[i - 1][1] - 1, panels[i - 1][2] - 1);
+        }
+        for (int i = 1; i <= panelCount; i++) {
+            for (int j = i + 1; j <= panelCount; j++) {
+                int distance;
+                if (panels[i - 1][0] == panels[j - 1][0]) {
+                    distance = distance(panels[i - 1][1] - 1, panels[i - 1][2] - 1, panels[j - 1][1] - 1, panels[j - 1][2] - 1);
+                } else {
+                    distance = Math.abs(panels[i - 1][0] - panels[j - 1][0]) + dist[i][0] + dist[j][0];
+                }
+                dist[i][j] = dist[j][i] = distance;
+            }
         }
 
+        int[] prerequisitesMask = new int[panelCount + 1];
 
-        conn = new HashMap<>(); // child -> parents
+        int[] inDegrees = new int[panelCount + 1];
+        Map<Integer, Set<Integer>> map = new HashMap<>();
         for (int[] seq : seqs) {
-            int a = seq[0] - 1;
-            int b = seq[1] - 1;
-            conn.computeIfAbsent(b, k -> new HashSet<>()).add(a);
+            int pre = seq[0], post = seq[1];
+            inDegrees[post]++;
+            map.computeIfAbsent(pre, k -> new HashSet<>()).add(post);
+        }
+        Queue<int[]> queue = new ArrayDeque<>();
+        for (int i = 1; i <= panelCount; i++) {
+            if (inDegrees[i] == 0) {
+                queue.offer(new int[]{i, 0});
+            }
+        }
+        while (!queue.isEmpty()) {
+            int[] poll = queue.poll();
+            int curNode = poll[0];
+            int curStatus = poll[1];
+            prerequisitesMask[curNode] |= curStatus;
+            for (int next : map.getOrDefault(curNode, Set.of())) {
+                queue.offer(new int[]{next, curStatus | (1 << curNode)});
+            }
         }
 
-        prerequisite = new boolean[panelCount][panelCount];
-        preChecked = new boolean[panelCount];
-        for (int pp = 0; pp < panelCount; pp++) {
-            checkPrerequisite(pp);
+        int totalMask = 1 << (panelCount + 1);
+        int[][] dp = new int[totalMask][panelCount + 1]; // [status][currPanel]
+        for (int[] row : dp) Arrays.fill(row, Integer.MAX_VALUE);
+        dp[0][1] = 0;
+
+        for (int mask = 0; mask < totalMask; mask++) {
+            for (int from = 1; from <= panelCount; from++) {
+                if (dp[mask][from] == Integer.MAX_VALUE) continue;
+                for (int next = 1; next <= panelCount; next++) {
+                    if ((mask & (1 << next)) != 0 || (prerequisitesMask[next] & mask) != prerequisitesMask[next])
+                        continue;
+                    int nextMask = mask | (1 << next);
+                    dp[nextMask][next] = Math.min(dp[nextMask][next], dp[mask][from] + dist[from][next]);
+                }
+            }
         }
 
-        // dfs
-        dfs(0, 0, new boolean[panelCount], 0);
+        for (int i = 1; i <= panelCount; i++) {
+            answer = Math.min(answer, dp[totalMask - 2][i]);
+        }
         return answer;
     }
 
-    private static void checkPrerequisite(int p) {
-        if (conn.get(p) == null || preChecked[p]) {
-            return;
-        }
-        preChecked[p] = true;
-        for (int pre : conn.get(p)) {
-            prerequisite[p][pre] = true;
-            checkPrerequisite(pre);
-        }
-        for (int pre : conn.get(p)) {
-            for (int ii = 0; ii < panelCount; ii++) {
-                prerequisite[p][ii] |= prerequisite[pre][ii];
-            }
-        }
-    }
-
-    private static void dfs(int currPanel, int depth, boolean[] isProcessed, int distance) {
-        if (distance >= answer) return;
-        if (depth >= panelCount) {
-            answer = distance;
-            return;
-        }
-        for (int i = 0; i < panelCount; i++) {
-            if (!fitsCondition(isProcessed, i) || isProcessed[i]) {
-                continue;
-            }
-            isProcessed[i] = true;
-            dfs(i, depth + 1, isProcessed, distance + distance(currPanel, i));
-            isProcessed[i] = false;
-        }
-    }
-
-    private static int distance(int fromP, int nextP) {
-        if (dist[fromP][nextP] != -1) {
-            return dist[fromP][nextP];
-        }
-        toElevator[fromP] = toElevator[fromP] != -1 ? toElevator[fromP] : distance(elevR, elevC, panels[fromP][1] - 1, panels[fromP][2] - 1);
-        toElevator[nextP] = toElevator[nextP] != -1 ? toElevator[nextP] : distance(elevR, elevC, panels[nextP][1] - 1, panels[nextP][2] - 1);
-        int distance;
-        if (panels[fromP][0] == panels[nextP][0]) {
-            distance = distance(panels[fromP][1] - 1, panels[fromP][2] - 1, panels[nextP][1] - 1, panels[nextP][2] - 1);
-        } else {
-            distance = toElevator[fromP] + toElevator[nextP] + Math.abs(panels[fromP][0] - panels[nextP][0]);
-        }
-        dist[fromP][nextP] = dist[nextP][fromP] = distance;
-        return distance;
-    }
-
-    private static boolean fitsCondition(boolean[] isProcessed, int panelIdx) {
-        for (int i = 0; i < panelCount; i++) {
-            if (!prerequisite[panelIdx][i]) {
-                continue;
-            }
-            if (!isProcessed[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     private static int distance(int fromR, int fromC, int toR, int toC) {
         boolean[][] visit = new boolean[r][c];
