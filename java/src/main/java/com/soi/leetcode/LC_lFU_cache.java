@@ -1,6 +1,7 @@
 package com.soi.leetcode;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <a href = "https://leetcode.com/problems/lru-cache/description/?envType=problem-list-v2&envId=ssd-ssd1-cache-system-design">Cache System Design</a>
@@ -16,74 +17,92 @@ public class LC_lFU_cache {
         public Node(int key, int value) {
             this.key = key;
             this.value = value;
-            this.counter = 0;
-        }
-
-        private void increaseCounter() {
-            this.counter++;
+            this.counter = 1;
         }
     }
 
-    private final HashMap<Integer, Node> map = new HashMap<>();
-    private Node head, tail;
+    private static class NodeLinkedList {
+        Node head;
+        Node tail;
+
+        public NodeLinkedList() {
+            head = new Node(-1, -1);
+            tail = new Node(-1, -1);
+            head.counter = -1;
+            tail.counter = -1;
+            head.next = tail;
+            tail.prev = head;
+        }
+
+        public int remove(Node node) {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+            return node.key;
+        }
+
+        public int removeFirst() {
+            return remove(tail.prev);
+        }
+
+        public void addFirst(Node node) {
+            node.prev = head;
+            node.next = head.next;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        public boolean isEmpty() {
+            return head.next == tail;
+        }
+    }
+
+    private final Map<Integer, Node> nodes = new HashMap<>();
+    private final Map<Integer, NodeLinkedList> freqMap = new HashMap<>();
     private final int capacity;
-    private int size;
+    private int minFreq;
 
     public LC_lFU_cache(int capacity) {
         this.capacity = capacity;
-        head = new Node(-1, -1);
-        tail = new Node(-1, -1);
-        head.next = tail;
-        tail.prev = head;
-        this.size = 0;
     }
 
     public int get(int key) {
-        // return available node
-        Node node = map.get(key);
+        Node node = nodes.get(key);
         if (node == null) return -1;
-        remove(node);
-        add(node);
-        node.increaseCounter();
+        increaseCounter(node);
         return node.value;
     }
 
     public void put(int key, int value) {
-        Node node = map.get(key);
+        Node node = nodes.get(key);
         if (node == null) {
-            node = new Node(key, value);
-            map.put(key, node);
-            if (map.size() == capacity) {
-                map.remove(tail.prev.key);
-                remove(tail.prev);
-            } else {
-                size++;
+            if (nodes.size() == capacity) {
+                int evictedKey = removeLFU();
+                nodes.remove(evictedKey);
             }
-            node.increaseCounter();
-            add(node);
+            node = new Node(key, value);
+            nodes.put(key, node);
+            freqMap.computeIfAbsent(1, k -> new NodeLinkedList()).addFirst(node);
+            minFreq = 1;
         } else {
-            node.increaseCounter();
-            remove(node);
-            add(node);
+            increaseCounter(node);
             node.value = value;
         }
     }
 
-    private void remove(Node node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+    private int removeLFU() {
+        return freqMap.get(minFreq).removeFirst();
     }
 
-    private void add(Node node) {
-        Node addNode = head;
-        while (addNode.next.counter >= node.counter) {
-            addNode = addNode.next;
-            if (addNode.next == tail) break;
+    private void increaseCounter(Node node) {
+        int freq = node.counter;
+        freqMap.get(freq).remove(node);
+        if (freqMap.get(freq).isEmpty()) {
+            freqMap.remove(freq);
         }
-        node.prev = addNode;
-        node.next = addNode.next;
-        addNode.next.prev = node;
-        addNode.next = node;
+        if(freqMap.get(minFreq) == null){
+            minFreq++;
+        }
+        node.counter++;
+        freqMap.computeIfAbsent(freq+1, k -> new NodeLinkedList()).addFirst(node);
     }
-
 }
