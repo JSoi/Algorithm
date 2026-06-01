@@ -1,6 +1,7 @@
 package com.soi.leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LC_n_queens {
@@ -10,55 +11,52 @@ public class LC_n_queens {
     }
 
     static class Solution {
-        private boolean[] row, col, diag1, diag2;
         private int len;
         private List<List<String>> answer;
 
         public List<List<String>> solveNQueens(int n) {
-            row = new boolean[n];
-            col = new boolean[n];
-            diag1 = new boolean[n * 2 - 1];
-            diag2 = new boolean[n * 2 - 1];
+            int[] position = new int[n];
             len = n;
-            boolean[][] chess = new boolean[n][n];
+            Arrays.fill(position, -1);
             answer = new ArrayList<>();
-            dp(0, 0, chess);
+            dp(0, position);
             return answer;
         }
 
-        public void dp(int loc, int count, boolean[][] board) {
-            if (count == len) {
-                answer.add(toList(board));
+        private void dp(int row, int[] position) {
+            if (row == len) {
+                answer.add(toList(position));
                 return;
             }
-            if (loc >= len * len) return;
-
-            int r = loc / len;
-            int c = loc % len;
-            int d1 = tod1Idx(r, c);
-            int d2 = tod2Idx(r, c);
-            if (row[r] || col[c] || diag1[d1] || diag2[d2]) {
-                dp(loc + 1, count, board);
-                return;
+            for (int c = 0; c < len; c++) {
+                if (canFill(row, c, position)) {
+                    position[row] = c;
+                    dp(row + 1, position);
+                    position[row] = -1;
+                }
             }
-            board[r][c] = row[r] = col[c] = diag1[d1] = diag2[d2] = true;
-            dp(loc + 1, count + 1, board);
-            board[r][c] = row[r] = col[c] = diag1[d1] = diag2[d2] = false;
-            dp(loc + 1, count, board);
         }
 
-        private int tod2Idx(int r, int c) {
-            int rr = len - r - 1;
-            int cc = c;
-            return rr + cc;
+        private boolean canFill(int row, int col, int[] pos) {
+            for (int r = 0; r < len; r++) {
+                if (row == r || pos[r] == -1) continue;
+                // 대각선의 위치
+                int c = pos[r];
+                if (c == col || (Math.abs(row - r) == Math.abs(c - col))) {
+                    return false;
+                }
+            }
+            return true;
         }
 
-        private int tod1Idx(int r, int c) {
-            return r + c;
-        }
-
-        private List<String> toList(boolean[][] board) {
-            List<String> lineList = new ArrayList<>();
+        private List<String> toList(int[] pos) {
+            boolean[][] board = new boolean[len][len];
+            for (int row = 0; row < len; row++) {
+                for (int col = 0; col < len; col++) {
+                    board[row][pos[row]] = true;
+                }
+            }
+            ArrayList<String> lineList = new ArrayList<>();
             for (boolean[] b : board) {
                 StringBuilder lineSb = new StringBuilder();
                 for (boolean value : b) {
