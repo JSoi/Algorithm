@@ -1,0 +1,19 @@
+package com.soi.leetcode;
+
+public class LC_powx_n {
+    public double myPow(double x, int n) {
+        if (n < 0) {
+            n = -n;
+            x = 1 / x;
+        }
+        double result = 1;
+        while (n != 0) {
+            if (n % 2 != 0) {
+                result *= x;
+            }
+            x *= x;
+            n /= 2;
+        }
+        return result;
+    }
+}
