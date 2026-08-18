@@ -13,17 +13,16 @@ public class LC_rotate_list {
     }
     public ListNode rotateRight(ListNode head, int k) {
         if (head == null || head.next == null) return head;
-        int size = findLength(head);
-        int rotateCount = k % size;
-        if (rotateCount == 0) return head;
-        int count = size - rotateCount;
-
+        int size = 1;
         ListNode tail = head;
         while (tail.next != null) {
             tail = tail.next;
+            size++;
         }
+        int rotateCount = k % size;
+        if (rotateCount == 0) return head;
         tail.next = head;
-
+        int count = size - rotateCount;
         ListNode newTail = head;
         while (count-- > 1) {
             newTail = newTail.next;
@@ -31,11 +30,6 @@ public class LC_rotate_list {
         ListNode newHead = newTail.next;
         newTail.next = null;
         return newHead;
-    }
-
-    private int findLength(ListNode head) {
-        if (head == null) return 0;
-        return 1 + findLength(head.next);
     }
 
     public class ListNode {
