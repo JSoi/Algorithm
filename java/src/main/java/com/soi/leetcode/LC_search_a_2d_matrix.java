@@ -13,54 +13,29 @@ public class LC_search_a_2d_matrix {
         System.out.println(result);
     }
 
-    private int[][] matrix;
-    int row, col;
-
     public boolean searchMatrix(int[][] matrix, int target) {
-        this.matrix = matrix;
-        // row
-        this.row = matrix.length;
-        this.col = matrix[0].length;
-        int targetRow = searchRow(target);
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
+        int row = matrix.length;
+        int col = matrix[0].length;
 
-        // col
-        int targetCol = searchCol(targetRow, target);
-        return target == matrix[targetRow][targetCol];
-    }
+        int left = 0;
+        int right = row * col - 1;
 
-    int searchRow(int target) {
-        int l = 0;
-        int r = row - 1;
-        int mid;
-        while (l < r) {
-            mid = (l + r + 1) / 2;
-            if (matrix[mid][0] < target) {
-                if (l == mid)
-                    return l;
-                l = mid;
-            } else if (matrix[mid][0] > target) {
-                r = mid - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int midValue = matrix[mid / col][mid % col];
+
+            if (midValue == target) {
+                return true;
+            } else if (midValue < target) {
+                left = mid + 1;
             } else {
-                return mid;
+                right = mid - 1;
             }
         }
-        return l;
+        return false;
     }
 
-    int searchCol(int targetRow, int target) {
-        int l = 0;
-        int r = col - 1;
-        int mid;
-        while (l < r) {
-            mid = (l + r + 1) / 2;
-            if (matrix[targetRow][mid] < target) {
-                l = mid;
-            } else if (matrix[targetRow][mid] > target) {
-                r = mid - 1;
-            } else {
-                return mid;
-            }
-        }
-        return l;
-    }
 }
