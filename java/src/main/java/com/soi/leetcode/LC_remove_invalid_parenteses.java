@@ -15,14 +15,15 @@ public class LC_remove_invalid_parenteses {
         System.out.println(result); // Output: ["()()()", "(())()"]
     }
 
-    private List<String> answer;
+    private Set<String> answer;
     private String s;
 
     public List<String> removeInvalidParentheses(String s) {
-        answer = new ArrayList<>();
+        answer = new HashSet<>();
         this.s = s;
+
         int l = 0, r = 0;
-        for(int i = 0; i < s.length(); i++) {
+        for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '(') {
                 l++;
             } else if (s.charAt(i) == ')') {
@@ -34,23 +35,28 @@ public class LC_remove_invalid_parenteses {
             }
         }
         dfs(0, "", l, r, 0);
-        return answer;
+        return new ArrayList<>(answer);
     }
 
     private void dfs(int idx, String curr, int l, int r, int open) {
+        if (open < 0 || l < 0 || r < 0)
+            return;
         if (idx == s.length()) {
-            if (open == 0 && l == 0 && r == 0) answer.add(curr);
+            if (open == 0 && l == 0 && r == 0)
+                answer.add(curr);
             return;
         }
         char c = s.charAt(idx);
         if (c == '(') {
-            if (l > 0) dfs(idx + 1, curr, l - 1, r, open);
+            if (l > 0)
+                dfs(idx + 1, curr, l - 1, r, open);
             dfs(idx + 1, curr + c, l, r, open + 1);
         } else if (c == ')') { // )
-            if (open == 0) {
+            if (r > 0) {
                 dfs(idx + 1, curr, l, r - 1, open);
             }
-            if (r > 0) dfs(idx + 1, curr + c, l, r - 1, open);
+            if (open > 0)
+                dfs(idx + 1, curr + c, l, r, open - 1);
         } else {
             dfs(idx + 1, curr + c, l, r, open);
         }
